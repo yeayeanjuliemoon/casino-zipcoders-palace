@@ -9,5 +9,25 @@ public class CrapsGame extends DiceGame {
         super();
     }
 
+    private void getRoundOneWager(){
+
+    }
+
+    private void getAllWagers(){
+
+    }
+
+    private void resetWagers(){
+
+    }
+
+    private void resetRoundNumber(){
+
+    }
+
+    private void setPoint(Integer point){
+        this.point = point;
+    }
+
 
 }
