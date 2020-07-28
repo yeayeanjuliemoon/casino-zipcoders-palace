@@ -28,4 +28,24 @@ public class Casino {
 
     public String printCasinoMenu() {
     }
+
+    public void playerLogin(String givenName) {
+    }
+
+
+    public void playerLogout(String givenName) {
+    }
+
+
+    public String printActivePlayers() {
+    }
+
+    public void parseMenuInput() {
+    }
+
+    public Boolean checkIfActivePlayers() {
+    }
+
+    public void quit() {
+    }
 }

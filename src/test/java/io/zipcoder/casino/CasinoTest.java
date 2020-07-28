@@ -55,4 +55,53 @@ public class CasinoTest {
         Assert.assertEquals(expectedResult, actualResult);
     }
 
+    @Test
+    public void playerLoginTest(){
+        Casino casino = new Casino();
+        String givenName = "GamblingDegenerate";
+
+        casino.playerLogin(givenName);
+        String actualPlayer = casino.printActivePlayers();
+    }
+
+    @Test
+    public void playerLogoutTest(){
+        Casino casino = new Casino();
+        String givenName = "GamblingDegenerate";
+
+        casino.playerLogin(givenName);
+        casino.playerLogout(givenName);
+
+        String actualPlayer = casino.printActivePlayers();
+
+    }
+
+    @Test
+    public void printActivePlayerTest(){
+        Casino casino = new Casino();
+        String givenName = "GamblingDegenerate";
+
+        casino.playerLogin(givenName);
+        String actualPlayer = casino.printActivePlayers();
+
+    }
+
+    @Test
+    public void parseMenuInputTest(){
+        Casino casino = new Casino();
+
+        casino.parseMenuInput();
+
+    }
+
+    @Test
+    public void checkIfActivePlayersTest(){
+        Casino casino = new Casino();
+
+        Boolean actualActivePlayers = casino.checkIfActivePlayers();
+
+        Assert.assertFalse(actualActivePlayers);
+    }
+
+
 }
