@@ -1,20 +1,26 @@
 package io.zipcoder.casino;
 import io.zipcoder.casino.utilities.Console;
 
+import java.util.ArrayList;
+
 public class Casino {
 
-    // List<Players> All Players
-    // List<Players> Active Players
-    Game currentGame;
-    Console console;
+    Player activePlayer;
+    //List<Player> Active Players
+    public Game currentGame;
+    public Console console;
+    private boolean opFlag;
 
     public Casino() {
         this.console = new Console(System.in, System.out);
+        this.opFlag = true;
     }
 
     public void run(){
-
-
+        while(opFlag) {
+            console.println(printCasinoMenu());
+            parseMenuInput();
+        }
     }
 
     public Player createPlayer(String aName){
@@ -27,7 +33,7 @@ public class Casino {
 
 
     public Game selectGame() {
-
+        return Game;
     }
 
 
@@ -36,6 +42,7 @@ public class Casino {
     }
 
     public String printCasinoMenu() {
+        return "A casino menu";
 
     }
 
@@ -55,6 +62,35 @@ public class Casino {
     }
 
     public void parseMenuInput() {
+        String input = console.getStringInput("Please enter selection >");
+        switch (input){
+            case "Create User":
+                //Player player = createPlayer();
+                // activePlayer = player;
+                break;
+            case "GoFish":
+                //something
+                break;
+            case "BlackJack":
+                if(checkIfActivePlayers()){
+                    this.currentGame = BlackJack;
+                    playGame(this.currentGame);
+                } else {
+                    //Error message?
+                }
+                break;
+            case "Craps":
+                //something
+                break;
+            case "Ceelo":
+                //something
+                break;
+            default:
+                console.println("Please enter a valid input");
+                break;
+
+
+        }
 
     }
 
@@ -63,6 +99,6 @@ public class Casino {
     }
 
     public void quit() {
-
+        System.exit(0);
     }
 }
