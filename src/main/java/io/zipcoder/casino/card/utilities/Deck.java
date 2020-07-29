@@ -1,4 +1,4 @@
-package io.zipcoder.casino.utilities;
+package io.zipcoder.casino.card.utilities;
 
 import java.util.List;
 
@@ -17,7 +17,6 @@ public class Deck {
     public void remove(Card card) {
 
     }
-
 
     public void generateDeck() {
 

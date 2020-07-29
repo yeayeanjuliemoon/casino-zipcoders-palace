@@ -1,4 +1,4 @@
-package io.zipcoder.casino.utilities;
+package io.zipcoder.casino.card.utilities;
 
 public class Card {
 
@@ -6,7 +6,6 @@ public class Card {
     private CardRank rank;
 
     public String toString() {
-        return null;
-
+        return "";
     }
 }

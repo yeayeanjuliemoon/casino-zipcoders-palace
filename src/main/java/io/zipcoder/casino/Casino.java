@@ -1,5 +1,4 @@
 package io.zipcoder.casino;
-import io.zipcoder.casino.utilities.Console;
 
 public class Casino {
 
@@ -27,7 +26,7 @@ public class Casino {
 
 
     public Game selectGame() {
-
+        return null;
     }
 
 
@@ -36,7 +35,7 @@ public class Casino {
     }
 
     public String printCasinoMenu() {
-
+        return null;
     }
 
     public void playerLogin(String givenName) {
@@ -50,8 +49,7 @@ public class Casino {
 
 
     public String printActivePlayers() {
-
-
+        return null;
     }
 
     public void parseMenuInput() {
@@ -59,7 +57,7 @@ public class Casino {
     }
 
     public Boolean checkIfActivePlayers() {
-
+        return null;
     }
 
     public void quit() {

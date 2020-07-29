@@ -1,12 +1,15 @@
-package io.zipcoder.casino.utilities;
+package io.zipcoder.casino.card.games;
 
 import io.zipcoder.casino.Player;
+import io.zipcoder.casino.card.utilities.Card;
+import io.zipcoder.casino.card.utilities.CardGame;
 
 import java.util.List;
+import java.util.Map;
 
 public class GoFish extends CardGame {
 
-    private Map<Player, Scores> playerScores;
+    private Map<Player, Integer> playerScores;
 
     public void playerTurn(){
 
@@ -18,7 +21,6 @@ public class GoFish extends CardGame {
 
     public Boolean checkPlayerHand(String rank) {
         return null;
-
     }
 
     public void transferCard(Player playerToTransfer) {
@@ -44,4 +46,27 @@ public class GoFish extends CardGame {
         return null;
     }
 
+    public void play() {
+
+    }
+
+    public void nextTurn() {
+
+    }
+
+    public Boolean checkGameState() {
+        return null;
+    }
+
+    public String printGameStatus() {
+        return null;
+    }
+
+    public String printGameRules() {
+        return null;
+    }
+
+    public void exit() {
+
+    }
 }
