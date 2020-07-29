@@ -116,7 +116,6 @@ public class Casino {
 
     public void parseMenuInput(){
         Integer input = console.getIntegerInput("Selection >");
-
         switch (input){
             case 1: //Login
                 console.print(printPlayers());
@@ -130,7 +129,6 @@ public class Casino {
                     pauseForReadability();
                 }
                 break;
-
             case 3: //BlackJack
                 if(checkIfActivePlayer()){
                     if(checkIfGamblingPlayer()){
@@ -166,8 +164,7 @@ public class Casino {
                 break;
             case 6: // Logout
                 if(checkIfActivePlayer()){
-                    String aPlayer = this.activePlayer.toString();
-                    playerLogout(); // Needs to be re-looked at
+                    playerLogout();
                 } else {
                     console.println("No player currently logged in");
                     pauseForReadability();
@@ -211,6 +208,7 @@ public class Casino {
         }
 
     }
+     */
 
     public Boolean checkIfActivePlayer() {
         if(this.activePlayer != null){
