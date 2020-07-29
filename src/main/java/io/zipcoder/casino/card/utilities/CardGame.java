@@ -9,15 +9,20 @@ import java.util.Map;
 
 public abstract class CardGame implements Game {
 
-    private Deck deck;
-    private Map<Player, List<Card>> playerHands;
+    protected boolean gameState;
+    protected Deck deck;
+    protected Map<Player, List<Card>> playerHands;
+    protected Player dealer;
+    protected Player activePlayer;
 
-    public CardGame(Integer handSize, Player... players){
+    public CardGame(Integer handSize, Player player){
+        this.activePlayer = player;
+        this.gameState = true;
         this.deck = new Deck();
         this.deck.shuffle();
-        for(Player p : players){
-            this.playerHands.put(p, new ArrayList<Card>());
-        }
+        this.dealer = new Player("Dealer");
+        this.playerHands.put(player, new ArrayList<Card>());
+        this.playerHands.put(this.dealer, new ArrayList<Card>());
         dealHands(handSize);
     }
 
