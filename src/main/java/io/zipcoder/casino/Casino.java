@@ -116,6 +116,7 @@ public class Casino {
 
     public void parseMenuInput(){
         Integer input = console.getIntegerInput("Selection >");
+
         switch (input){
             case 1: //Login
                 console.print(printPlayers());
@@ -129,6 +130,7 @@ public class Casino {
                     pauseForReadability();
                 }
                 break;
+
             case 3: //BlackJack
                 if(checkIfActivePlayer()){
                     if(checkIfGamblingPlayer()){
