@@ -6,7 +6,7 @@ import io.zipcoder.casino.DiceGame;
 import java.util.Map;
 
 public class CeeLoGame extends DiceGame {
-    public Map<Player, Integer> roundScore;
+    //public Map<Player, Integer> roundScore;
     public Integer pot;
 
     public CeeLoGame(){
@@ -24,8 +24,10 @@ public class CeeLoGame extends DiceGame {
     private Integer checkCombinations(){
         return null;
     }
-
+    /*
     private Player findRoundWinner(){
         return null;
     }
+
+     */
 }
