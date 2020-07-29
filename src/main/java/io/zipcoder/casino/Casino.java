@@ -46,6 +46,7 @@ public class Casino {
 
     }
 
+
     public void selectGame(Game selectedGame) {
         this.currentGame = selectedGame;
         playGame();
@@ -112,6 +113,7 @@ public class Casino {
 
     public void parseMenuInput(){
         Integer input = console.getIntegerInput("Selection >");
+
         switch (input){
             case 1: //Login
                 playerLogin(console.getStringInput("What is your name?"));
@@ -124,6 +126,7 @@ public class Casino {
                     pauseForReadability();
                 }
                 break;
+
             case 3: //BlackJack
                 if(checkIfActivePlayer()){
                     selectGame(new Blackjack());
@@ -176,6 +179,7 @@ public class Casino {
         }
 
     }
+     */
 
     public Boolean checkIfActivePlayer() {
         if(this.activePlayer != null){
