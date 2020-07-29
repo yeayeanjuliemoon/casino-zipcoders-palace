@@ -42,11 +42,6 @@ public class Casino {
         }
     }
 
-    public void resetBalance(){
-
-    }
-
-
     public void selectGame(Game selectedGame) {
         this.currentGame = selectedGame;
         playGame();
@@ -103,19 +98,27 @@ public class Casino {
         }
     }
 
-    public void playerLogout(String givenName) {
+    public void playerLogout() {
         this.activePlayer = null;
     }
 
-    public String printActivePlayers() {
-        return listOfPlayers.toString();
+    public String printPlayers() {
+        StringBuilder players = new StringBuilder("Current Players:\n");
+        if(listOfPlayers.size() != 0){
+            for(Player player : listOfPlayers){
+                players.append("    "+player.toString()+"\n");
+            }
+        } else{
+            players.append("   None\n");
+        }
+        return players.toString();
     }
 
     public void parseMenuInput(){
         Integer input = console.getIntegerInput("Selection >");
-
         switch (input){
             case 1: //Login
+                console.print(printPlayers());
                 playerLogin(console.getStringInput("What is your name?"));
                 break;
             case 2: //GoFish
@@ -126,10 +129,12 @@ public class Casino {
                     pauseForReadability();
                 }
                 break;
-
             case 3: //BlackJack
                 if(checkIfActivePlayer()){
-                    selectGame(new Blackjack());
+                    if(checkIfGamblingPlayer()){
+                        addToPlayerBalance();
+                        selectGame(new Blackjack());
+                    }
                 } else {
                     console.println("No player currently logged in");
                     pauseForReadability();
@@ -137,7 +142,10 @@ public class Casino {
                 break;
             case 4: // Craps
                 if(checkIfActivePlayer()){
-                    selectGame(new CrapsGame());
+                    if(checkIfGamblingPlayer()){
+                        addToPlayerBalance();
+                        selectGame(new CrapsGame());
+                    }
                 } else {
                     console.println("No player currently logged in");
                     pauseForReadability();
@@ -145,7 +153,10 @@ public class Casino {
                 break;
             case 5: // CeeLo
                 if(checkIfActivePlayer()){
-                    selectGame(new CeeLoGame());
+                    if(checkIfGamblingPlayer()){
+                        addToPlayerBalance();
+                        selectGame(new CeeLoGame());
+                    }
                 } else {
                     console.println("No player currently logged in");
                     pauseForReadability();
@@ -153,8 +164,7 @@ public class Casino {
                 break;
             case 6: // Logout
                 if(checkIfActivePlayer()){
-                    String aPlayer = this.activePlayer.toString();
-                    playerLogout(aPlayer); // Needs to be re-looked at
+                    playerLogout();
                 } else {
                     console.println("No player currently logged in");
                     pauseForReadability();
@@ -170,6 +180,25 @@ public class Casino {
         }
     }
 
+    public void addToPlayerBalance(){
+        console.println("You currently have $"+ ((GamblingPlayer)this.activePlayer).getBalance() + " in your account");
+        console.print("Would you like to add to your balance before your game begins? yes/no");
+        while(true) {
+            String userInput = console.getStringInput("");
+            if (userInput.toLowerCase().equals("yes")) {
+                Integer balanceAdd = console.getIntegerInput("How much would you like to add?");
+                if(balanceAdd > 0){
+                    ((GamblingPlayer)this.activePlayer).deposit(balanceAdd);
+                }
+                break;
+            } else if (userInput.toLowerCase().equals("no")) {
+                break;
+            } else {
+                console.print("Please enter \"yes\" or \"no\"");
+            }
+        }
+    }
+
     private void pauseForReadability(){
         try{
             Thread.sleep(1500);
@@ -179,7 +208,6 @@ public class Casino {
         }
 
     }
-     */
 
     public Boolean checkIfActivePlayer() {
         if(this.activePlayer != null){
@@ -189,8 +217,18 @@ public class Casino {
         }
     }
 
+    public Boolean checkIfGamblingPlayer(){
+        if(activePlayer instanceof GamblingPlayer){
+            return true;
+        } else {
+            console.print("Come back when you're older!");
+            pauseForReadability();
+            return false;
+        }
+    }
+
     public void quit() {
-        console.println(" Thank you for playing at ZipCoder's Casino!");
+        console.println(" Thank you for playing at ZipCoder's Palace!");
         System.exit(0);
     }
 }
