@@ -6,10 +6,7 @@ import io.zipcoder.casino.card.utilities.Card;
 import io.zipcoder.casino.card.utilities.CardGame;
 import io.zipcoder.casino.card.utilities.CardRank;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GoFish extends CardGame {
 
@@ -22,10 +19,24 @@ public class GoFish extends CardGame {
         playerScores.put(this.dealer, 0);
     }
 
-    public boolean playerTurn(){
-
-
-        return false;
+    public void dealerTurn(){
+        boolean hasGoneFish = false;
+        Random rand = new Random();
+        List<Card> dealerHand;
+        while(!hasGoneFish){
+            // BREAK THIS UP
+            dealerHand = this.playerHands.get(this.dealer);
+            Integer cardIndex = rand.nextInt(dealerHand.size() - 1);
+            CardRank chosenRank = dealerHand.get(cardIndex).getRank();
+            if(checkPlayerHand(chosenRank, this.activePlayer)){
+                transferCards(this.activePlayer, this.dealer, chosenRank);
+                checkForCardSets(this.dealer);
+            }
+            else{
+                goFish(this.dealer);
+                hasGoneFish = true;
+            }
+        }
     }
 
     public Boolean checkPlayerHand(CardRank rank, Player player) {
@@ -79,7 +90,7 @@ public class GoFish extends CardGame {
 
     }
 
-    public List<Card> removeSet(CardRank rank, Player player) {
+    private List<Card> removeSet(CardRank rank, Player player) {
         List<Card> playerHand = playerHands.get(player);
         List<Card> removedCards = new ArrayList<>();
         for(Card c : playerHand){
@@ -103,6 +114,7 @@ public class GoFish extends CardGame {
     public void play() {
         while(this.gameState){
             nextTurn();
+            dealerTurn();
         }
         determineWinner();
     }
@@ -136,7 +148,13 @@ public class GoFish extends CardGame {
 
     private CardRank getPlayerCardRank(){
         Console console = new Console(System.in, System.out);
-
-        return null;
+        String userString = console.getStringInput("Enter the card rank you would like to fish for: ");
+        try {
+            CardRank chosenRank = CardRank.valueOf(userString.toUpperCase());
+            return chosenRank;
+        } catch (IllegalArgumentException e){
+            System.out.println("Invalid Rank Input");
+            return getPlayerCardRank();
+        }
     }
 }
