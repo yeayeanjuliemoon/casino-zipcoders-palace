@@ -40,6 +40,12 @@ public class GoFish extends CardGame {
     }
 
     public void goFish(Player player) {
+        if(this.deck.getDeck().isEmpty()){
+            this.gameState = false;
+        }
+        else{
+            this.playerHands.get(player).add(this.deck.draw());
+        }
 
     }
 
@@ -48,6 +54,8 @@ public class GoFish extends CardGame {
     }
 
     public void incrementScore(Player player) {
+        Integer newScore = this.playerScores.get(player) + 1;
+        this.playerScores.replace(player, newScore);
     }
 
     public Player determineWinner() {

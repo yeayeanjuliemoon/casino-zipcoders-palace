@@ -21,7 +21,7 @@ public abstract class CardGame implements Game {
         this.deck = new Deck();
         this.deck.shuffle();
         this.dealer = new Player("Dealer");
-        this.playerHands.put(player, new ArrayList<Card>());
+        this.playerHands.put(this.activePlayer, new ArrayList<Card>());
         this.playerHands.put(this.dealer, new ArrayList<Card>());
         dealHands(handSize);
     }
