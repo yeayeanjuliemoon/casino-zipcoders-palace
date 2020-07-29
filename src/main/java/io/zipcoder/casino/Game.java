@@ -1,9 +1,9 @@
 package io.zipcoder.casino;
 
 public interface Game {
-    String GameName;
+    //String gameName;
 
-    Boolean GameState;
+    //Boolean gameState;
 
     void play();
 

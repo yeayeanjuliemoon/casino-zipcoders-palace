@@ -1,10 +1,24 @@
 package io.zipcoder.casino;
 
-public interface GamblingPlayer {
+public class GamblingPlayer extends Player implements Gambler{
 
-    void withdraw(Integer amount);
+    Integer balance;
 
+    public GamblingPlayer(String aName) {
+        super(aName);
+        this.balance = 0;
+    }
 
-    void Deposit(Integer amount);
+    public Integer getBalance(){
+        return this.balance;
+    }
 
+    public void withdraw(Integer amount){
+        this.balance -= amount;
+
+    }
+
+    public void deposit(Integer amount){
+        this.balance += amount;
+    }
 }

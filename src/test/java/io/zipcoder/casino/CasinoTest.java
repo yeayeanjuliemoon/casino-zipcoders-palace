@@ -13,6 +13,8 @@ public class CasinoTest {
 
     @Test
     public void createPlayerTest(){
+        Casino casino = new Casino();
+
 
     }
 
@@ -50,7 +52,7 @@ public class CasinoTest {
 
         String actualResult = casino.printCasinoMenu();
         String expectedResult = "Welcome to ZipCoder's Palace!\nPlease input a selection from below\nSomething}" +
-                                ": a soemthing game\n Something: a something game\n";
+                                ": a something game\n Something: a something game\n";
 
         Assert.assertEquals(expectedResult, actualResult);
     }
