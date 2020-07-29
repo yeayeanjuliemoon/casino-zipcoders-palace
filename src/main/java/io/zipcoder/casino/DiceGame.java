@@ -1,6 +1,6 @@
 package io.zipcoder.casino;
 
-public abstract class DiceGame {
+public abstract class DiceGame implements Game {
     Dice dice;
     Integer numberRoll;
     Integer diceSum;

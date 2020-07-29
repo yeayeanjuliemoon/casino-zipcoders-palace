@@ -17,7 +17,7 @@ public class Casino {
 
     public Casino() {
         this.console = new Console(System.in, System.out);
-        this.listOfPlayers = new ArrayList<>();
+        this.listOfPlayers = new ArrayList<Player>();
         this.activePlayer = null;
         this.opFlag = true;
     }
@@ -179,7 +179,6 @@ public class Casino {
         }
 
     }
-     */
 
     public Boolean checkIfActivePlayer() {
         if(this.activePlayer != null){
