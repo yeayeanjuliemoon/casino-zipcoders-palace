@@ -165,7 +165,7 @@ public class Casino {
             case 6: // Logout
                 if(checkIfActivePlayer()){
                     String aPlayer = this.activePlayer.toString();
-                    playerLogout(aPlayer); // Needs to be re-looked at
+                    playerLogout(); // Needs to be re-looked at
                 } else {
                     console.println("No player currently logged in");
                     pauseForReadability();
