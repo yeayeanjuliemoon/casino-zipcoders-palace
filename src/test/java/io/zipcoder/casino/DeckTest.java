@@ -8,8 +8,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 public class DeckTest {
 
@@ -46,5 +45,23 @@ public class DeckTest {
 
         assertFalse(testDeck.containsCard(toBeRemoved));
 
+    }
+
+    @Test
+    public void testShuffle(){
+        Deck testDeck = new Deck();
+        List<Card> deckList = testDeck.getDeck();
+
+        testDeck.shuffle();
+
+        List<Card> shuffledList = testDeck.getDeck();
+        // Need to convert to arrays to check it the order is the same
+        Card[] originalDeck = new Card[deckList.size()];
+        originalDeck = deckList.toArray(originalDeck);
+
+        Card[] shuffledDeck = new Card[shuffledList.size()];
+        shuffledDeck = deckList.toArray(shuffledDeck);
+
+        assertNotEquals(originalDeck, shuffledDeck);
     }
 }
