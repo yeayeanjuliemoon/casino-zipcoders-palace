@@ -1,5 +1,10 @@
 package io.zipcoder.casino;
 
+import io.zipcoder.casino.Player;
+import io.zipcoder.casino.DiceGame;
+
+import java.util.Map;
+
 public class CeeLoGame extends DiceGame {
     //public Map<Player, Integer> roundScore;
     public Integer pot;

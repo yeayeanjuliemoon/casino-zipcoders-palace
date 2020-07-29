@@ -1,7 +1,14 @@
 package io.zipcoder.casino;
 
+import io.zipcoder.casino.Player;
+import io.zipcoder.casino.CrapsWager;
+import io.zipcoder.casino.DiceGame;
+
+import java.util.Map;
+
 public class CrapsGame extends DiceGame {
-    //private Map<Player, Wager> playerWagerMap;
+
+    private Map<Player, CrapsWager> playerWagerMap;
     private Integer roundNum;
     private Integer point;
 
