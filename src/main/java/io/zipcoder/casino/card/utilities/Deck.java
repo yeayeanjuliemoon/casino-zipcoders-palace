@@ -13,14 +13,27 @@ public class Deck {
     }
 
     public Card draw() {
-        return null;
+        if(this.deck.isEmpty()) {
+            return null;
+        } else{
+            Card drawCard = this.deck.get(0);
+            this.deck.remove(drawCard);
+            return drawCard;
+        }
     }
 
     public void shuffle() {
 
     }
 
-    public void remove(Card card) {
+    public boolean remove(Card card) {
+        for(Card c : this.deck){
+            if(c.getSuit() == card.getSuit() && c.getRank() == card.getRank()){
+                this.deck.remove(c);
+                return true;
+            }
+        }
+        return false;
 
     }
 
@@ -35,4 +48,16 @@ public class Deck {
 
     }
 
+    public List<Card> getDeck(){
+        return this.deck;
+    }
+
+    public boolean containsCard(Card card) {
+        for(Card c : this.deck){
+            if(c.getSuit() == card.getSuit() && c.getRank() == card.getRank()){
+                return true;
+            }
+        }
+        return false;
+    }
 }
