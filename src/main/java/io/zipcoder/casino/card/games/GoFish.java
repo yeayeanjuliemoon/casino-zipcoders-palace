@@ -27,8 +27,14 @@ public class GoFish extends CardGame {
         return false;
     }
 
-    public Boolean checkPlayerHand(String rank) {
-        return null;
+    public Boolean checkPlayerHand(CardRank rank, Player player) {
+        List<Card> playerHand = playerHands.get(player);
+        for(Card c : playerHand){
+            if(c.getRank() == rank){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void transferCard(Player playerToTransfer) {
@@ -36,7 +42,9 @@ public class GoFish extends CardGame {
     }
 
     public List<Card> checkForCardSets(Player player) {
-        return null;
+        //Goes through a players hand and returns a list of all the cards
+        Map<CardRank, Integer> rankMap = new HashMap<>();
+        List<Card> playerHand = playerHands.get(player);
     }
 
     public void goFish(Player player) {
@@ -49,7 +57,7 @@ public class GoFish extends CardGame {
 
     }
 
-    public void removeSet(String rank) {
+    public void removeSet(CardRank rank) {
 
     }
 
