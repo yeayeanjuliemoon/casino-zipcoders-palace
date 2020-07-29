@@ -1,9 +1,12 @@
 package io.zipcoder.casino.utilities;
 
+import io.zipcoder.casino.Player;
+
 import java.util.List;
 import java.util.Map;
 
-public class Blackjack {
+public class Blackjack extends CardGame{
+
     private Player dealer;
     private Map<Player, Integer> playerBets;
 

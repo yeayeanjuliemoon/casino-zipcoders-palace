@@ -1,6 +1,10 @@
 package io.zipcoder.casino.utilities;
 
-public class GoFish {
+import io.zipcoder.casino.Player;
+
+import java.util.List;
+
+public class GoFish extends CardGame {
 
     private Map<Player, Scores> playerScores;
 
