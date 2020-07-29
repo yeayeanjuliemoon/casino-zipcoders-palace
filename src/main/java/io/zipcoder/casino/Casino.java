@@ -53,15 +53,15 @@ public class Casino {
 
     public String printCasinoMenu() {
         String menu = "******* ♖ ZipCoder's Palace ♖  *******\n" +
-                      "******* Please Enter A Number: *******\n"+
-                      "* 1: Login ~~~~~~~~~~~~~~~~~~~~~~~ *\n"+
-                      "* 2: Play GoFish ~~~~~~~~~~~~~~~~~ *\n"+
-                      "* 3: Play BlackJack ~~~~~~~~~~~~~~ *\n"+
-                      "* 4: Play Craps ~~~~~~~~~~~~~~~~~~ *\n"+
-                      "* 5: Play CeeLo ~~~~~~~~~~~~~~~~~~ *\n"+
-                      "* 6: Logout ~~~~~~~~~~~~~~~~~~~~~~ *\n"+
-                      "* 7: Leave ZipCoder's Palace ~~~~~ *\n"+
-                      "**** You must be logged in to play a game! ****\n";
+                "******* Please Enter A Number: *******\n"+
+                "* 1: Login ~~~~~~~~~~~~~~~~~~~~~~~ *\n"+
+                "* 2: Play GoFish ~~~~~~~~~~~~~~~~~ *\n"+
+                "* 3: Play BlackJack ~~~~~~~~~~~~~~ *\n"+
+                "* 4: Play Craps ~~~~~~~~~~~~~~~~~~ *\n"+
+                "* 5: Play CeeLo ~~~~~~~~~~~~~~~~~~ *\n"+
+                "* 6: Logout ~~~~~~~~~~~~~~~~~~~~~~ *\n"+
+                "* 7: Leave ZipCoder's Palace ~~~~~ *\n"+
+                "**** You must be logged in to play a game! ****\n";
         return menu;
     }
 
