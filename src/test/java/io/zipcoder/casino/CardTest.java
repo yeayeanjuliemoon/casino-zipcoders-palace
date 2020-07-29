@@ -19,7 +19,7 @@ public class CardTest {
         assertEquals(expectedRank, testCard.getRank());
         assertEquals(expectedSuit, testCard.getSuit());
     }
-    
+
     @Test
     public void testCardtoString(){
         CardRank expectedRank = CardRank.ACE;
