@@ -1,6 +1,6 @@
 package io.zipcoder.casino;
 
-public class GamblingPlayer extends Player implements Gambler{
+public class GamblingPlayer extends Player implements Gambler {
 
     Integer balance;
 

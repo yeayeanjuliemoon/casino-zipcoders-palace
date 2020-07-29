@@ -1,5 +1,4 @@
 package io.zipcoder.casino;
-import io.zipcoder.casino.utilities.Console;
 
 import java.util.ArrayList;
 
@@ -34,6 +33,7 @@ public class Casino {
 
     public Game selectGame() {
         return Game;
+
     }
 
 
@@ -43,7 +43,6 @@ public class Casino {
 
     public String printCasinoMenu() {
         return "A casino menu";
-
     }
 
     public void playerLogin(String givenName) {
@@ -57,8 +56,7 @@ public class Casino {
 
 
     public String printActivePlayers() {
-
-
+        return null;
     }
 
     public void parseMenuInput() {
@@ -95,7 +93,7 @@ public class Casino {
     }
 
     public Boolean checkIfActivePlayers() {
-
+        return null;
     }
 
     public void quit() {
