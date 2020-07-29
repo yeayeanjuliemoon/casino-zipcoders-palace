@@ -18,7 +18,7 @@ public class Casino {
     public void run(){
         while(opFlag) {
             console.println(printCasinoMenu());
-            parseMenuInput();
+            //parseMenuInput();
         }
     }
 
@@ -32,7 +32,7 @@ public class Casino {
 
 
     public Game selectGame() {
-        return Game;
+        return null;
 
     }
 
@@ -58,7 +58,7 @@ public class Casino {
     public String printActivePlayers() {
         return null;
     }
-
+    /*
     public void parseMenuInput() {
         String input = console.getStringInput("Please enter selection >");
         switch (input){
@@ -71,8 +71,8 @@ public class Casino {
                 break;
             case "BlackJack":
                 if(checkIfActivePlayers()){
-                    this.currentGame = BlackJack;
-                    playGame(this.currentGame);
+                    //this.currentGame = BlackJack;
+                    //playGame(this.currentGame);
                 } else {
                     //Error message?
                 }
@@ -91,6 +91,7 @@ public class Casino {
         }
 
     }
+     */
 
     public Boolean checkIfActivePlayers() {
         return null;
