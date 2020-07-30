@@ -52,10 +52,6 @@ public class CrapsGame extends DiceGame {
         return null;
     }
 
-    @Override
-    public String printGameStatus() {
-        return null;
-    }
 
     @Override
     public String printGameRules() {

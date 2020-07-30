@@ -40,10 +40,6 @@ public class CeeLoGame extends DiceGame {
         return null;
     }
 
-    @Override
-    public String printGameStatus() {
-        return null;
-    }
 
     @Override
     public String printGameRules() {

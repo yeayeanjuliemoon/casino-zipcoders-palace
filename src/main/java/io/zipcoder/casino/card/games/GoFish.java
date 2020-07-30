@@ -215,10 +215,6 @@ public class GoFish extends CardGame {
         return true;
     }
 
-    @Override
-    public String printGameStatus() {
-        return null;
-    }
 
     //Tested
     public String printGameRules() {
