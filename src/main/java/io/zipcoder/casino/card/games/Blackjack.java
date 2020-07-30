@@ -208,10 +208,6 @@ public class Blackjack extends CardGame implements GamblingGame {
         return gameState;
     }
 
-    public String printGameStatus() {
-        return null;
-    }
-
     public String printGameRules() {
         String rules = "* The goal of the game is to beat the dealer's hand without going over 21\n" +
                 "* You and the dealer start with two cards. One of the dealer's cards is hidden until their turn.\n"+
