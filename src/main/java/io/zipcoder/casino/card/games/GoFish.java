@@ -12,6 +12,7 @@ public class GoFish extends CardGame {
 
     private Map<Player, Integer> playerScores;
     private Integer booksScored = 0;
+    private Console console = new Console(System.in, System.out);
 
     public GoFish(Integer handSize, Player activePlayer) {
         super(handSize, activePlayer);
@@ -99,9 +100,9 @@ public class GoFish extends CardGame {
         for(Card c : playerHand){
             if(c.getRank() == rank){
                 removedCards.add(c);
-                playerHands.get(player).remove(c);
             }
         }
+        this.playerHands.get(player).removeAll(removedCards);
         return removedCards;
     }
 
@@ -136,13 +137,14 @@ public class GoFish extends CardGame {
         boolean hasGoneFish = false;
         while(!hasGoneFish){
             // Get the rank from the player -> check if possible -> transfer cards or go fish
+            this.console.println(showHand(this.activePlayer));
             CardRank chosenRank = getPlayerInput();
-            if(checkPlayerHand(chosenRank, this.dealer)){
-                transferCards(this.dealer, this.activePlayer, chosenRank);
-            }
-            else if(chosenRank == null){
+            if(chosenRank == null){
                 this.gameState = false;
                 break;
+            }
+            else if(checkPlayerHand(chosenRank, this.dealer)){
+                transferCards(this.dealer, this.activePlayer, chosenRank);
             }
             else {
                 goFish(this.activePlayer);
@@ -196,9 +198,14 @@ public class GoFish extends CardGame {
 
     private CardRank parseCardRank(String input) throws IllegalArgumentException{
         CardRank chosenRank = CardRank.valueOf(input.toUpperCase());
-        if(checkPlayerHand(chosenRank, this.activePlayer)){
+        if(checkPlayerHand(chosenRank, this.dealer)){
             throw new IllegalArgumentException();
         }
         return chosenRank;
+    }
+
+    public static void main(String[] args){
+        GoFish game = new GoFish(5, new Player("Frank"));
+        game.play();
     }
 }
