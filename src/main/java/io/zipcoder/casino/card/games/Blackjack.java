@@ -110,8 +110,7 @@ public class Blackjack extends CardGame implements GamblingGame {
         }
         if(playerTwentyOne()){
             payout();
-        }
-        if(playerBets.get(activePlayer) >= 0) {
+        } else if(playerBets.get(activePlayer) >= 0) {
             dealerTurn();
             if(determineWinner()){
                 payout();
@@ -122,7 +121,7 @@ public class Blackjack extends CardGame implements GamblingGame {
     }
 
     public void nextTurn() {
-        console.println(showHand(activePlayer));
+        console.println("Your hand: "+showHand(activePlayer));
         Boolean choice = getPlayerChoice();
         if(choice){
             dealCard(activePlayer);
@@ -135,7 +134,8 @@ public class Blackjack extends CardGame implements GamblingGame {
     }
 
     public Boolean playerTwentyOne(){
-        if(countHand(activePlayer) == 21){
+        if(countHand(activePlayer).equals(21)){
+            console.println(activePlayer.toString() + " wins! You won " + playerBets.get(activePlayer) * 2);
             return true;
         }
         return false;
@@ -215,10 +215,9 @@ public class Blackjack extends CardGame implements GamblingGame {
 
     public String printGameRules() {
         String rules = "* The goal of the game is to beat the dealer's hand without going over 21\n" +
-                "* You and the dealer start with two cards. One of the dealer's cards is hidden until the end.\n"+
-                "* You can ask for additional cards until you want to stop or go over 21.\n"+
-                "* Cards Two through Nine are face value. Face cards are worth 10. Aces are worth 1 or 11.\n"+
-                "* Any more rules?";
+                "* You and the dealer start with two cards. One of the dealer's cards is hidden until their turn.\n"+
+                "* You can ask for additional cards until you want to stop or you go over 21.\n"+
+                "* Cards Two through Ten are face value. Face cards are worth 10. Aces are worth 1 or 11.\n\n";
         return rules;
     }
 
