@@ -221,7 +221,7 @@ public class Casino {
         if(activePlayer instanceof GamblingPlayer){
             return true;
         } else {
-            console.print("Come back when you're older!");
+            console.print("Come back when you're older!\n");
             pauseForReadability();
             return false;
         }
