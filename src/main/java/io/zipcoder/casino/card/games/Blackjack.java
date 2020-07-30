@@ -1,23 +1,24 @@
 package io.zipcoder.casino.card.games;
 
-import io.zipcoder.casino.Console;
-import io.zipcoder.casino.GamblingGame;
-import io.zipcoder.casino.GamblingPlayer;
-import io.zipcoder.casino.Player;
+import io.zipcoder.casino.*;
 import io.zipcoder.casino.card.utilities.Card;
 import io.zipcoder.casino.card.utilities.CardGame;
+import io.zipcoder.casino.card.utilities.CardRank;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Blackjack extends CardGame implements GamblingGame {
 
-    private GamblingPlayer dealer;
+    //private GamblingPlayer dealer;
     private Map<Player, Integer> playerBets;
     private Console console = new Console(System.in, System.out);
-    private Integer prizeBalance = 0;
 
     public Blackjack(Player player) {
         super(2, player);
+        playerBets = new HashMap<>();
     }
 
     public void dealCard(Player player) {
@@ -26,13 +27,17 @@ public class Blackjack extends CardGame implements GamblingGame {
         playerHands.get(player).add(card);
     }
 
-    public Integer countDealerHand(){
-        return countHand(dealer);
-    }
     public Integer countHand(Player player) {
         Integer currentValue = 0;
+        Boolean hasAce = false;
         for(Card card: playerHands.get(player)){
             currentValue += cardValueCalculator(card);
+            if(card.getRank() == CardRank.ACE){
+                hasAce = true;
+            }
+        }
+        if(currentValue > 21 && hasAce){
+            currentValue -=10;
         }
         return currentValue;
     }
@@ -54,6 +59,8 @@ public class Blackjack extends CardGame implements GamblingGame {
     public Boolean playerBust(Player player) {
         if(countHand(player) > 21){
             console.println("Oh no! "+player.toString()+" went bust!");
+            playerBets.replace(player,-1);
+            pauseForReadability();
             return true;
         } else {
             return false;
@@ -61,35 +68,55 @@ public class Blackjack extends CardGame implements GamblingGame {
     }
 
     public void dealerTurn(){
-        while(countHand(dealer) >=16){
+        console.println(showHand(dealer));
+        while(countHand(dealer) <=16){
             dealCard(dealer);
+            pauseForReadability();
         }
         if(playerBust(dealer)){
-
+            playerBets.replace(dealer,-1);
         }
-        //while playerHands.get(dealer).
     }
 
     public void takeBet() {
-        Integer wager = console.getIntegerInput("Would you like to place a wager? Please enter a value.");
-        ((GamblingPlayer) this.activePlayer).withdraw(wager);
-        prizeBalance += (wager *2);
+        Integer wager = console.getIntegerInput("Please place your wager:");
+        if(wager <= ((GamblingPlayer) this.activePlayer).getBalance()) {
+            ((GamblingPlayer) this.activePlayer).withdraw(wager);
+            playerBets.put(activePlayer, wager);
+            playerBets.put(dealer, wager);
+        } else {
+            console.println("Insufficient funds!");
+            takeBet();
+        }
     }
 
     public void payout() {
-        int prizeBalance = 0;
-        //for (Player player : playerBets)
-        ((GamblingPlayer) this.activePlayer).deposit(this.prizeBalance);
+        int winnings = playerBets.get(activePlayer)*2;
+        ((GamblingPlayer) this.activePlayer).deposit(winnings);
+    }
+
+    public void payBack() {
+        int wager = playerBets.get(activePlayer);
+        ((GamblingPlayer) this.activePlayer).deposit(wager);
     }
 
     public void play() {
         console.println(printGameRules());
         takeBet();
+        console.println("Dealer has a "+ playerHands.get(dealer).get(0));
+        pauseForReadability();
         while(gameState){
             nextTurn();
         }
-        dealerTurn();
-        //checkwinner
+        if(playerTwentyOne()){
+            payout();
+        }
+        if(playerBets.get(activePlayer) >= 0) {
+            dealerTurn();
+            if(determineWinner()){
+                payout();
+            }
+        }
         exit();
 
     }
@@ -107,11 +134,34 @@ public class Blackjack extends CardGame implements GamblingGame {
         }
     }
 
+    public Boolean playerTwentyOne(){
+        if(countHand(activePlayer) == 21){
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean determineWinner() {
+        if ((countHand(activePlayer) > countHand(dealer)) || (playerBets.get(dealer) < 0)) {
+            console.println(activePlayer.toString() + " wins! You won " + playerBets.get(activePlayer) * 2);
+            pauseForReadability();
+            return true;
+        } else if(countHand(activePlayer) == countHand(dealer)){
+            console.println("Game ends in a draw.");
+            payBack();
+            return false;
+        }else{
+            console.println("Dealer wins.");
+            pauseForReadability();
+            return false;
+        }
+    }
+
     public int cardValueCalculator(Card card){
         int returnValue;
         switch (card.getRank()){
             case ACE:
-                returnValue = 1;
+                returnValue = 11;
                 break;
             case TWO:
                 returnValue = 2;
@@ -172,7 +222,16 @@ public class Blackjack extends CardGame implements GamblingGame {
         return rules;
     }
 
+    private void pauseForReadability(){
+        try{
+            Thread.sleep(1000);
+        } catch (InterruptedException e){
+            Logger logger = Logger.getLogger(Casino.class.getName());
+            logger.log(Level.INFO, e.toString());
+        }
+    }
     public void exit() {
         console.println("Thank you for playing blackjack!");
+        pauseForReadability();
     }
 }
