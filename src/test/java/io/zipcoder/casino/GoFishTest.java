@@ -40,18 +40,25 @@ public class GoFishTest {
     @Test
     public void testParseRankSuccess1(){
         CardRank expected = CardRank.JACK;
-        CardRank actual = game.parseCardRank("jack");
+        try {
+            CardRank actual = game.parseCardRank("jack");
+            assertEquals(expected, actual);
+        } catch (IllegalArgumentException e){
 
-        assertEquals(expected, actual);
+        }
 
     }
 
     @Test
     public void testParseRankSuccess2(){
         CardRank expected = CardRank.TWO;
-        CardRank actual = game.parseCardRank("two");
+        try {
+            CardRank actual = game.parseCardRank("two");
 
-        assertEquals(expected, actual);
+            assertEquals(expected, actual);
+        } catch (IllegalArgumentException e){
+
+        }
     }
 
     @Test
@@ -71,8 +78,12 @@ public class GoFishTest {
     @Test
     public void testHandleUserInput(){
         boolean successStatus = this.game.handleUserInput(CardRank.JACK);
-
-        assertFalse(successStatus);
+        if(this.game.checkPlayerHand(CardRank.JACK, this.mainPlayer)){
+            assertFalse(successStatus);
+        }
+        else{
+            assertTrue(successStatus);
+        }
 
         boolean exitStatus = this.game.handleUserInput(null);
 
