@@ -27,7 +27,6 @@ public class GoFish extends CardGame {
         Random rand = new Random();
         List<Card> dealerHand;
         while(!hasGoneFish){
-            // BREAK THIS UP
             dealerHand = this.playerHands.get(this.dealer);
             Integer cardIndex = rand.nextInt(dealerHand.size() - 1);
             CardRank chosenRank = dealerHand.get(cardIndex).getRank();
@@ -68,12 +67,12 @@ public class GoFish extends CardGame {
         this.playerHands.get(receivingPlayer).addAll(cardSet);
     }
 
-    // Not Tested
+    // Tested
     public void checkForCardSets(Player player) {
         //Goes through a players hand, determines if there is a set of cards, removes that set
         Map<CardRank, Integer> rankMap = createRankMap(player);
         for(CardRank c : rankMap.keySet()){
-            if(rankMap.get(c) == 4){
+            if(rankMap.get(c) >= 4){
                 System.out.println("Set of 4: " + c.toString() + " for player: " + player.toString());
                 removeSet(c, player);
                 incrementScore(player);
@@ -104,12 +103,16 @@ public class GoFish extends CardGame {
             return;
         }
         else{
-            this.playerHands.get(player).add(this.deck.draw());
+            Card fishedCard = this.deck.draw();
+            this.playerHands.get(player).add(fishedCard);
+            if(player.equals(this.activePlayer)) {
+                console.println(player.toString() + " drew: " + fishedCard.toString());
+            }
         }
 
     }
 
-    // Not tested
+    // Tested
     private List<Card> removeSet(CardRank rank, Player player) {
         List<Card> playerHand = playerHands.get(player);
         List<Card> removedCards = new ArrayList<>();
@@ -145,14 +148,22 @@ public class GoFish extends CardGame {
 
     // Can't Test
     public void play() {
+        console.println(printGameRules());
         while(this.gameState){
+            console.println(printScores());
             nextTurn();
             if(this.gameState) {
                 dealerTurn();
                 this.gameState = checkGameState();
             }
         }
-        determineWinner();
+        console.println("The Game is Over!");
+        try {
+            console.println("And the winner is..." + determineWinner().toString());
+        } catch (NullPointerException e){
+            console.println("It's a Tie!");
+        }
+        console.println("Final " + printScores());
     }
 
     // Can'T Test
@@ -161,6 +172,7 @@ public class GoFish extends CardGame {
         boolean hasGoneFish = false;
         while(!hasGoneFish){
             // Get the rank from the player -> check if possible -> transfer cards or go fish
+            this.console.println("YOUR HAND : ");
             this.console.println(showHand(this.activePlayer));
             CardRank chosenRank = getPlayerInput();
             hasGoneFish = handleUserInput(chosenRank);
@@ -181,6 +193,7 @@ public class GoFish extends CardGame {
         else {
             this.console.println("GO FISH!");
             goFish(this.activePlayer);
+            this.console.println("YOUR HAND :");
             this.console.println(showHand(this.activePlayer));
             return true;
         }
@@ -190,7 +203,7 @@ public class GoFish extends CardGame {
     // Tested
     public Boolean checkGameState() {
         // Checks the game over conditions, return false if the game should stop
-        if(this.booksScored == 7){
+        if(this.playerScores.get(this.dealer) == 5 || this.playerScores.get(this.activePlayer) == 5){
           return false;
         }
         else if(this.deck.getDeck().isEmpty()){
@@ -207,9 +220,15 @@ public class GoFish extends CardGame {
         return null;
     }
 
-    // Not Tested
+    //Tested
     public String printGameRules() {
-        return null;
+        return "=======Welcome to Go Fish=======\n" +
+        "How to Play: \n" +
+        "- Ask the other player if they have any cards that match the rank\n of a card in your hand\n" +
+        "- If they do, you take all cards of that rank from their hand, and\n can ask again"+
+                "- If they don't, you Go Fish! draw a card, and your turn is over\n" +
+                "- Each time you get a set of four cards from the same rank, you \n remove those cards from your hand and gain a point\n" +
+        "- First player to 5 points wins! \n\n" + "Enter 'exit' at any time to end the game. Have Fun!";
     }
 
     // Cannot Test
@@ -240,6 +259,14 @@ public class GoFish extends CardGame {
             throw new IllegalArgumentException();
         }
         return chosenRank;
+    }
+
+    private String printScores(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Scores :  ");
+        sb.append(this.activePlayer.toString() + " : " + this.playerScores.get(this.activePlayer) + "    ");
+        sb.append(this.dealer.toString() + " : " + this.playerScores.get(this.dealer) + "\n");
+        return sb.toString();
     }
 
     public static void main(String[] args){

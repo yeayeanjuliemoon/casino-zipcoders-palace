@@ -3,6 +3,7 @@ package io.zipcoder.casino;
 import io.zipcoder.casino.card.games.GoFish;
 import io.zipcoder.casino.card.utilities.Card;
 import io.zipcoder.casino.card.utilities.CardRank;
+import io.zipcoder.casino.card.utilities.CardSuit;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -136,6 +137,32 @@ public class GoFishTest {
         Integer finalHandSize = this.playerHands.get(this.mainPlayer).size();
 
         assertTrue(finalHandSize == (initialHandSize + 1));
+    }
+
+    @Test
+    public void testCheckForCardSets(){
+        List<Card> playerHand = this.playerHands.get(this.mainPlayer);
+        CardRank firstRank = playerHand.get(0).getRank();
+        playerHand.add(new Card(CardSuit.SPADE, firstRank));
+        playerHand.add(new Card(CardSuit.SPADE, firstRank));
+        playerHand.add(new Card(CardSuit.SPADE, firstRank));
+
+        this.game.checkForCardSets(this.mainPlayer);
+
+        assertFalse(this.game.checkPlayerHand(firstRank, this.mainPlayer));
+    }
+
+    @Test
+    public void testPrintRules(){
+        String expectedRules = "=======Welcome to Go Fish=======\n" +
+                "How to Play: \n" +
+                "- Ask the other player if they have any cards that match the rank\n of a card in your hand\n" +
+                "- If they do, you take all cards of that rank from their hand, and\n can ask again"+
+                "- If they don't, you Go Fish! draw a card, and your turn is over\n" +
+                "- Each time you get a set of four cards from the same rank, you \n remove those cards from your hand and gain a point\n" +
+                "- First player to 5 points wins! \n\n" + "Enter 'exit' at any time to end the game. Have Fun!";
+
+        assertEquals(expectedRules, this.game.printGameRules());
     }
 
 
