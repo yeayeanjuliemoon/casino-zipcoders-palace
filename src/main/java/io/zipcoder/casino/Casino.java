@@ -133,7 +133,7 @@ public class Casino {
                 if(checkIfActivePlayer()){
                     if(checkIfGamblingPlayer()){
                         addToPlayerBalance();
-                        selectGame(new Blackjack());
+                        selectGame(new Blackjack(2, this.activePlayer));
                     }
                 } else {
                     console.println("No player currently logged in");
