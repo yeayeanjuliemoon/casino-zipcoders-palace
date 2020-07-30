@@ -37,4 +37,33 @@ public class CrapsGame extends DiceGame {
     }
 
 
+    @Override
+    public void play() {
+
+    }
+
+    @Override
+    public void nextTurn() {
+
+    }
+
+    @Override
+    public Boolean checkGameState() {
+        return null;
+    }
+
+    @Override
+    public String printGameStatus() {
+        return null;
+    }
+
+    @Override
+    public String printGameRules() {
+        return null;
+    }
+
+    @Override
+    public void exit() {
+
+    }
 }

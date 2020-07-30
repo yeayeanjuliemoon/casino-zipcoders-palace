@@ -15,6 +15,7 @@ public class Blackjack extends CardGame implements GamblingGame {
     private Map<Player, Integer> playerBets;
     private Console console = new Console(System.in, System.out);
 
+
     public Blackjack(Player player) {
         super(2, player);
         playerBets = new HashMap<>();
