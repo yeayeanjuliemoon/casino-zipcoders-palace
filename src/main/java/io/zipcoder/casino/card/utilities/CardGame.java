@@ -51,4 +51,8 @@ public abstract class CardGame implements Game {
     public void setPlayerHands(Map<Player, List<Card>> playerHands) {
         this.playerHands = playerHands;
     }
+
+    public Player getDealer(){
+        return this.dealer;
+    }
 }

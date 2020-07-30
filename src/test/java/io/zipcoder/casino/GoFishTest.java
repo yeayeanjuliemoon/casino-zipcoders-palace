@@ -9,11 +9,11 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class GoFishTest {
     private Player mainPlayer;
+    private Player dealer;
     private GoFish game;
     private Map<Player, List<Card>> playerHands;
 
@@ -22,11 +22,19 @@ public class GoFishTest {
         this.mainPlayer = new Player("Bob");
         this.game = new GoFish(5, mainPlayer);
         this.playerHands = game.getPlayerHands();
+        this.dealer = game.getDealer();
     }
 
     @Test
     public void testConstructor(){
         assertEquals(this.playerHands.get(mainPlayer).size(), 5);
+    }
+
+    @Test
+    public void testCheckPlayerHand(){
+        CardRank rankToBeChecked = this.playerHands.get(this.mainPlayer).get(0).getRank();
+
+        assertTrue(this.game.checkPlayerHand(rankToBeChecked, this.mainPlayer));
     }
 
     @Test
@@ -58,6 +66,44 @@ public class GoFishTest {
         boolean gameState = this.game.checkGameState();
 
         assertTrue(gameState);
+    }
+
+    @Test
+    public void testHandleUserInput(){
+        boolean successStatus = this.game.handleUserInput(CardRank.JACK);
+
+        assertFalse(successStatus);
+
+        boolean exitStatus = this.game.handleUserInput(null);
+
+        assertTrue(exitStatus);
+    }
+
+    @Test
+    public void testIncrementPlayerScore(){
+        this.game.incrementScore(this.mainPlayer);
+        Player winner = this.game.determineWinner();
+
+        assertEquals(winner, this.mainPlayer);
+
+        this.game.incrementScore(this.dealer);
+        this.game.incrementScore(this.dealer);
+
+        winner = this.game.determineWinner();
+
+        assertEquals(winner, this.dealer);
+    }
+
+    @Test
+    public void testTransferCards(){
+        CardRank toBeTransferred = this.playerHands.get(this.mainPlayer).get(0).getRank();
+        Integer dealerBeforeTransferHandSize = this.playerHands.get(this.dealer).size();
+
+        this.game.transferCards(this.mainPlayer, this.dealer, toBeTransferred);
+
+        Integer dealerAfterTransferHandSize = this.playerHands.get(this.dealer).size();
+
+        assertTrue(dealerAfterTransferHandSize > dealerBeforeTransferHandSize);
     }
 
 

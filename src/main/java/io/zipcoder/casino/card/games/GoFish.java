@@ -114,6 +114,7 @@ public class GoFish extends CardGame {
     }
 
     public Player determineWinner() {
+        // Tested
         if(playerScores.get(this.activePlayer) > playerScores.get(this.dealer)){
             return this.activePlayer;
         }
@@ -128,7 +129,7 @@ public class GoFish extends CardGame {
     public void play() {
         while(this.gameState){
             nextTurn();
-            if(gameState) {
+            if(this.gameState) {
                 dealerTurn();
                 this.gameState = checkGameState();
             }
@@ -148,9 +149,9 @@ public class GoFish extends CardGame {
         }
     }
 
-    private boolean handleUserInput(CardRank chosenRank){
+    public boolean handleUserInput(CardRank chosenRank){
         if(chosenRank == null){
-            this.gameState = false;
+            exit();
             return true;
         }
         else if(checkPlayerHand(chosenRank, this.dealer)){
@@ -190,6 +191,8 @@ public class GoFish extends CardGame {
 
     public void exit() {
         // Print Exit Message
+        this.gameState = false;
+        this.console.println("Thank you for playing Go Fish!");
     }
 
 
