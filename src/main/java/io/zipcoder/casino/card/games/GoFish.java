@@ -11,6 +11,7 @@ import java.util.*;
 public class GoFish extends CardGame {
 
     private Map<Player, Integer> playerScores;
+    private Integer booksScored = 0;
 
     public GoFish(Integer handSize, Player activePlayer) {
         super(handSize, activePlayer);
@@ -59,6 +60,7 @@ public class GoFish extends CardGame {
         Map<CardRank, Integer> rankMap = createRankMap(player);
         for(CardRank c : rankMap.keySet()){
             if(rankMap.get(c) == 4){
+                System.out.println("Set of 4: " + c.toString() + " for player: " + player.toString());
                 removeSet(c, player);
                 incrementScore(player);
             }
@@ -66,6 +68,7 @@ public class GoFish extends CardGame {
     }
 
     private Map<CardRank, Integer> createRankMap(Player player){
+        // Helper method to make the mapping for each rank to their respective counts
         Map<CardRank, Integer> rankMap = new HashMap<>();
         List<Card> playerHand = playerHands.get(player);
         for(Card c: playerHand){
@@ -82,7 +85,7 @@ public class GoFish extends CardGame {
 
     public void goFish(Player player) {
         if(this.deck.getDeck().isEmpty()){
-            this.gameState = false;
+            return;
         }
         else{
             this.playerHands.get(player).add(this.deck.draw());
@@ -108,13 +111,22 @@ public class GoFish extends CardGame {
     }
 
     public Player determineWinner() {
-        return null;
+        if(playerScores.get(this.activePlayer) > playerScores.get(this.dealer)){
+            return this.activePlayer;
+        }
+        else if(playerScores.get(this.activePlayer) < playerScores.get(this.dealer)){
+            return this.dealer;
+        }
+        else{
+            return null;
+        }
     }
 
     public void play() {
         while(this.gameState){
             nextTurn();
             dealerTurn();
+            this.gameState = checkGameState();
         }
         determineWinner();
     }
@@ -124,14 +136,35 @@ public class GoFish extends CardGame {
         boolean hasGoneFish = false;
         while(!hasGoneFish){
             // Get the rank from the player -> check if possible -> transfer cards or go fish
-            goFish(this.activePlayer);
-            hasGoneFish = true;
+            CardRank chosenRank = getPlayerInput();
+            if(checkPlayerHand(chosenRank, this.dealer)){
+                transferCards(this.dealer, this.activePlayer, chosenRank);
+            }
+            else if(chosenRank == null){
+                this.gameState = false;
+                break;
+            }
+            else {
+                goFish(this.activePlayer);
+                hasGoneFish = true;
+            }
+            checkForCardSets(this.activePlayer);
         }
 
     }
 
     public Boolean checkGameState() {
-        return null;
+        // Checks the game over conditions, return false if the game should stop
+        if(this.booksScored == 13){
+          return false;
+        }
+        else if(this.deck.getDeck().isEmpty()){
+            // The deck is empty and one of the players has an empty hand
+            if(playerHands.get(this.activePlayer).isEmpty() || playerHands.get(this.dealer).isEmpty()){
+                return false;
+            }
+        }
+        return true;
     }
 
     public String printGameStatus() {
@@ -143,18 +176,29 @@ public class GoFish extends CardGame {
     }
 
     public void exit() {
-
+        // Print Exit Message
     }
 
-    private CardRank getPlayerCardRank(){
+
+    private CardRank getPlayerInput(){
         Console console = new Console(System.in, System.out);
         String userString = console.getStringInput("Enter the card rank you would like to fish for: ");
+        if(userString.toLowerCase().equals("exit")){
+            return null;
+        }
         try {
-            CardRank chosenRank = CardRank.valueOf(userString.toUpperCase());
-            return chosenRank;
+            return parseCardRank(userString);
         } catch (IllegalArgumentException e){
             System.out.println("Invalid Rank Input");
-            return getPlayerCardRank();
+            return getPlayerInput();
         }
+    }
+
+    private CardRank parseCardRank(String input) throws IllegalArgumentException{
+        CardRank chosenRank = CardRank.valueOf(input.toUpperCase());
+        if(checkPlayerHand(chosenRank, this.activePlayer)){
+            throw new IllegalArgumentException();
+        }
+        return chosenRank;
     }
 }
