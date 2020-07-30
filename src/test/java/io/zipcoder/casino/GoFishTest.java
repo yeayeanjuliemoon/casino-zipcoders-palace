@@ -117,6 +117,27 @@ public class GoFishTest {
         assertTrue(dealerAfterTransferHandSize > dealerBeforeTransferHandSize);
     }
 
+    @Test
+    public void testRankMapCreation(){
+        Map<CardRank, Integer> rankMap = this.game.createRankMap(this.mainPlayer);
+        List<Card> mainPlayerHand = this.playerHands.get(this.mainPlayer);
+
+        for(Card c : mainPlayerHand){
+            assertTrue(rankMap.get(c.getRank()) > 0);
+        }
+    }
+
+    @Test
+    public void testGoFish(){
+        Integer initialHandSize = this.playerHands.get(this.mainPlayer).size();
+
+        this.game.goFish(this.mainPlayer);
+
+        Integer finalHandSize = this.playerHands.get(this.mainPlayer).size();
+
+        assertTrue(finalHandSize == (initialHandSize + 1));
+    }
+
 
 
 

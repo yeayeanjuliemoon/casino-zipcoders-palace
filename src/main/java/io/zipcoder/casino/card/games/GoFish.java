@@ -21,7 +21,8 @@ public class GoFish extends CardGame {
         playerScores.put(this.dealer, 0);
     }
 
-    public void dealerTurn(){
+    // Not Testable
+    private void dealerTurn(){
         boolean hasGoneFish = false;
         Random rand = new Random();
         List<Card> dealerHand;
@@ -31,18 +32,25 @@ public class GoFish extends CardGame {
             Integer cardIndex = rand.nextInt(dealerHand.size() - 1);
             CardRank chosenRank = dealerHand.get(cardIndex).getRank();
             this.console.println("Dealer fishes for : " + chosenRank.toString());
-            if(checkPlayerHand(chosenRank, this.activePlayer)){
-                transferCards(this.activePlayer, this.dealer, chosenRank);
-                checkForCardSets(this.dealer);
-            }
-            else{
-                this.console.println("Dealer goes fish!");
-                goFish(this.dealer);
-                hasGoneFish = true;
-            }
+            hasGoneFish = handleDealerInput(chosenRank);
         }
     }
 
+    // Not testable
+    private boolean handleDealerInput(CardRank chosenRank){
+        if(checkPlayerHand(chosenRank, this.activePlayer)){
+            transferCards(this.activePlayer, this.dealer, chosenRank);
+            checkForCardSets(this.dealer);
+            return false;
+        }
+        else{
+            this.console.println("Dealer goes fish!");
+            goFish(this.dealer);
+            return true;
+        }
+    }
+
+    // Tested
     public Boolean checkPlayerHand(CardRank rank, Player player) {
         List<Card> playerHand = playerHands.get(player);
         for(Card c : playerHand){
@@ -53,11 +61,14 @@ public class GoFish extends CardGame {
         return false;
     }
 
+
+    // Tested
     public void transferCards(Player playerToTransfer, Player receivingPlayer, CardRank rank) {
         List<Card> cardSet = removeSet(rank, playerToTransfer);
         this.playerHands.get(receivingPlayer).addAll(cardSet);
     }
 
+    // Not Tested
     public void checkForCardSets(Player player) {
         //Goes through a players hand, determines if there is a set of cards, removes that set
         Map<CardRank, Integer> rankMap = createRankMap(player);
@@ -70,7 +81,8 @@ public class GoFish extends CardGame {
         }
     }
 
-    private Map<CardRank, Integer> createRankMap(Player player){
+    //Tested
+    public Map<CardRank, Integer> createRankMap(Player player){
         // Helper method to make the mapping for each rank to their respective counts
         Map<CardRank, Integer> rankMap = new HashMap<>();
         List<Card> playerHand = playerHands.get(player);
@@ -86,6 +98,7 @@ public class GoFish extends CardGame {
         return rankMap;
     }
 
+    // Tested
     public void goFish(Player player) {
         if(this.deck.getDeck().isEmpty()){
             return;
@@ -96,6 +109,7 @@ public class GoFish extends CardGame {
 
     }
 
+    // Not tested
     private List<Card> removeSet(CardRank rank, Player player) {
         List<Card> playerHand = playerHands.get(player);
         List<Card> removedCards = new ArrayList<>();
@@ -108,13 +122,15 @@ public class GoFish extends CardGame {
         return removedCards;
     }
 
+    // Tested
     public void incrementScore(Player player) {
         Integer newScore = this.playerScores.get(player) + 1;
         this.playerScores.replace(player, newScore);
+        this.booksScored += 1;
     }
 
+    // Tested
     public Player determineWinner() {
-        // Tested
         if(playerScores.get(this.activePlayer) > playerScores.get(this.dealer)){
             return this.activePlayer;
         }
@@ -126,6 +142,8 @@ public class GoFish extends CardGame {
         }
     }
 
+
+    // Can't Test
     public void play() {
         while(this.gameState){
             nextTurn();
@@ -137,6 +155,7 @@ public class GoFish extends CardGame {
         determineWinner();
     }
 
+    // Can'T Test
     public void nextTurn() {
         // Show the players hand, ask for player input, take appropriate cards from dealer until go fish
         boolean hasGoneFish = false;
@@ -149,6 +168,7 @@ public class GoFish extends CardGame {
         }
     }
 
+    // Tested
     public boolean handleUserInput(CardRank chosenRank){
         if(chosenRank == null){
             exit();
@@ -167,6 +187,7 @@ public class GoFish extends CardGame {
 
     }
 
+    // Tested
     public Boolean checkGameState() {
         // Checks the game over conditions, return false if the game should stop
         if(this.booksScored == 7){
@@ -181,21 +202,24 @@ public class GoFish extends CardGame {
         return true;
     }
 
+    @Override
     public String printGameStatus() {
         return null;
     }
 
+    // Not Tested
     public String printGameRules() {
         return null;
     }
 
+    // Cannot Test
     public void exit() {
         // Print Exit Message
         this.gameState = false;
         this.console.println("Thank you for playing Go Fish!");
     }
 
-
+    // Cannot Test
     private CardRank getPlayerInput(){
         String userString = this.console.getStringInput("Enter the card rank you would like to fish for: ");
         if(userString.toLowerCase().equals("exit")){
@@ -209,6 +233,7 @@ public class GoFish extends CardGame {
         }
     }
 
+    // Tested
     public CardRank parseCardRank(String input) throws IllegalArgumentException{
         CardRank chosenRank = CardRank.valueOf(input.toUpperCase());
         if(!checkPlayerHand(chosenRank, this.activePlayer)){
