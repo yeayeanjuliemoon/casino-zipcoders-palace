@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 public class Blackjack extends CardGame implements GamblingGame {
 
-    //private GamblingPlayer dealer;
     private Map<Player, Integer> playerBets;
     private Console console = new Console(System.in, System.out);
 
