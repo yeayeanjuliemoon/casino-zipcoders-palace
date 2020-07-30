@@ -67,7 +67,7 @@ public class Blackjack extends CardGame implements GamblingGame {
     }
 
     private void dealerTurn(){
-        console.println(showHand(dealer));
+        console.println("Dealer hand: "+showHand(dealer));
         while(countHand(dealer) <=16){
             dealCard(dealer);
             pauseForReadability();
