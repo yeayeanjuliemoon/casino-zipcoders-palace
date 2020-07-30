@@ -66,7 +66,7 @@ public class Blackjack extends CardGame implements GamblingGame {
         }
     }
 
-    public void dealerTurn(){
+    private void dealerTurn(){
         console.println(showHand(dealer));
         while(countHand(dealer) <=16){
             dealCard(dealer);
@@ -140,7 +140,7 @@ public class Blackjack extends CardGame implements GamblingGame {
         return false;
     }
 
-    public Boolean determineWinner() {
+    private Boolean determineWinner() {
         if ((countHand(activePlayer) > countHand(dealer)) || (playerBets.get(dealer) < 0)) {
             console.println(activePlayer.toString() + " wins! You won " + playerBets.get(activePlayer) * 2);
             pauseForReadability();
@@ -205,7 +205,7 @@ public class Blackjack extends CardGame implements GamblingGame {
     }
 
     public Boolean checkGameState() {
-        return null;
+        return gameState;
     }
 
     public String printGameStatus() {
