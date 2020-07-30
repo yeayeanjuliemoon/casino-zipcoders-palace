@@ -143,26 +143,32 @@ public class GoFish extends CardGame {
             // Get the rank from the player -> check if possible -> transfer cards or go fish
             this.console.println(showHand(this.activePlayer));
             CardRank chosenRank = getPlayerInput();
-            if(chosenRank == null){
-                this.gameState = false;
-                break;
-            }
-            else if(checkPlayerHand(chosenRank, this.dealer)){
-                transferCards(this.dealer, this.activePlayer, chosenRank);
-            }
-            else {
-                this.console.println("GO FISH!");
-                goFish(this.activePlayer);
-                this.console.println(showHand(this.activePlayer));
-                hasGoneFish = true;
-            }
+            hasGoneFish = handleUserInput(chosenRank);
             checkForCardSets(this.activePlayer);
         }
     }
 
+    private boolean handleUserInput(CardRank chosenRank){
+        if(chosenRank == null){
+            this.gameState = false;
+            return true;
+        }
+        else if(checkPlayerHand(chosenRank, this.dealer)){
+            transferCards(this.dealer, this.activePlayer, chosenRank);
+            return false;
+        }
+        else {
+            this.console.println("GO FISH!");
+            goFish(this.activePlayer);
+            this.console.println(showHand(this.activePlayer));
+            return true;
+        }
+
+    }
+
     public Boolean checkGameState() {
         // Checks the game over conditions, return false if the game should stop
-        if(this.booksScored == 13){
+        if(this.booksScored == 7){
           return false;
         }
         else if(this.deck.getDeck().isEmpty()){
