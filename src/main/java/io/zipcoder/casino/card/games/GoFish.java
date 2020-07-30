@@ -268,9 +268,4 @@ public class GoFish extends CardGame {
         sb.append(this.dealer.toString() + " : " + this.playerScores.get(this.dealer) + "\n");
         return sb.toString();
     }
-
-    public static void main(String[] args){
-        GoFish game = new GoFish(5, new Player("Frank"));
-        game.play();
-    }
 }
