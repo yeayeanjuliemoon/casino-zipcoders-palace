@@ -11,7 +11,7 @@ public interface Game {
 
     Boolean checkGameState();
 
-    String printGameStatus();
+    String printScore();
 
     String printGameRules();
 

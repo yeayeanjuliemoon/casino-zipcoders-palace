@@ -58,6 +58,10 @@ public class GoFish extends CardGame {
         return null;
     }
 
+    public String printScore() {
+        return null;
+    }
+
     public String printGameStatus() {
         return null;
     }

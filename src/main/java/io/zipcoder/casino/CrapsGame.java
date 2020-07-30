@@ -37,4 +37,35 @@ public class CrapsGame extends DiceGame {
     }
 
 
+    public void takeBet(Integer bet) {
+
+    }
+
+    public void payout() {
+
+    }
+
+    public void play() {
+
+    }
+
+    public void nextTurn() {
+
+    }
+
+    public Boolean checkGameState() {
+        return null;
+    }
+
+    public String printScore() {
+        return null;
+    }
+
+    public String printGameRules() {
+        return null;
+    }
+
+    public void exit() {
+
+    }
 }

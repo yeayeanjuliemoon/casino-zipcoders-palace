@@ -93,14 +93,14 @@ public class Casino {
                 break;
             case 4: // Craps
                 if(checkIfActivePlayers()){
-                    selectGame(new CrapsGame());
+//                    selectGame(new CrapsGame());
                 } else {
                     console.println("No player currently logged in");
                 }
                 break;
             case 5: // CeeLo
                 if(checkIfActivePlayers()){
-                    selectGame(new CeeLoGame());
+//                    selectGame(new CeeLoGame());
                 } else {
                     console.println("No player currently logged in");
                 }

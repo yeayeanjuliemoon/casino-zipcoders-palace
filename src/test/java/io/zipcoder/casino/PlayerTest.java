@@ -11,7 +11,7 @@ public class PlayerTest {
         Player player = new Player(givenName);
 
         String actualResult = player.toString();
-        String expectedResult = "Something";
+        String expectedResult = "DegenerateGambler";
 
         Assert.assertEquals(actualResult, expectedResult);
     }

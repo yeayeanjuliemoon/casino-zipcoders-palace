@@ -39,6 +39,10 @@ public class Blackjack extends CardGame implements GamblingGame {
 
     }
 
+    public void takeBet(Integer bet) {
+
+    }
+
     public void payout() {
 
     }
@@ -52,6 +56,10 @@ public class Blackjack extends CardGame implements GamblingGame {
     }
 
     public Boolean checkGameState() {
+        return null;
+    }
+
+    public String printScore() {
         return null;
     }
 
