@@ -3,16 +3,22 @@ package io.zipcoder.casino;
 import io.zipcoder.casino.card.games.Blackjack;
 import io.zipcoder.casino.card.games.GoFish;
 
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Casino {
 
+    private ArrayList<Player> listOfPlayers;
     public Player activePlayer;
     public Game currentGame;
     public Console console;
-    private boolean opFlag;
+    private final boolean opFlag;
 
     public Casino() {
         this.console = new Console(System.in, System.out);
+        this.listOfPlayers = new ArrayList<>();
+        this.activePlayer = null;
         this.opFlag = true;
     }
 
@@ -24,19 +30,22 @@ public class Casino {
     }
 
     public Player createPlayer(String aName){
-        return new Player(aName);
+        if (getGamblingStatus()) {
+            GamblingPlayer aGamblingPlayer = new GamblingPlayer(aName);
+            aGamblingPlayer.deposit(console.getIntegerInput("Please enter a starting wallet balance."));
+            this.listOfPlayers.add(aGamblingPlayer);
+            return aGamblingPlayer;
+        } else {
+            Player aPlayer = new Player(aName);
+            this.listOfPlayers.add(aPlayer);
+            return aPlayer;
+        }
     }
-
-    public void resetBalance(){
-
-    }
-
 
     public void selectGame(Game selectedGame) {
         this.currentGame = selectedGame;
         playGame();
     }
-
 
     private void playGame() {
         currentGame.play();
@@ -44,90 +53,182 @@ public class Casino {
 
     public String printCasinoMenu() {
         String menu = "******* ♖ ZipCoder's Palace ♖  *******\n" +
-                      "******* Please Enter A Number: *******\n"+
-                      "* 1: Login ~~~~~~~~~~~~~~~~~~~~~~~ *\n"+
-                      "* 2: Play GoFish ~~~~~~~~~~~~~~~~~ *\n"+
-                      "* 3: Play BlackJack ~~~~~~~~~~~~~~ *\n"+
-                      "* 4: Play Craps ~~~~~~~~~~~~~~~~~~ *\n"+
-                      "* 5: Play CeeLo ~~~~~~~~~~~~~~~~~~ *\n"+
-                      "* 6: Logout ~~~~~~~~~~~~~~~~~~~~~~ *\n"+
-                      "* 7: Leave ZipCoder's Palace ~~~~~ *\n\n"+
-                      "**** You must be logged in to play a game! ****\n\n";
+                "******* Please Enter A Number: *******\n"+
+                "* 1: Login ~~~~~~~~~~~~~~~~~~~~~~~ *\n"+
+                "* 2: Play GoFish ~~~~~~~~~~~~~~~~~ *\n"+
+                "* 3: Play BlackJack ~~~~~~~~~~~~~~ *\n"+
+                "* 4: Play Craps ~~~~~~~~~~~~~~~~~~ *\n"+
+                "* 5: Play CeeLo ~~~~~~~~~~~~~~~~~~ *\n"+
+                "* 6: Logout ~~~~~~~~~~~~~~~~~~~~~~ *\n"+
+                "* 7: Leave ZipCoder's Palace ~~~~~ *\n"+
+                "**** You must be logged in to play a game! ****\n";
         return menu;
     }
 
     public void playerLogin(String givenName) {
-
+        if(isAPlayer(givenName) >= 0){
+            this.activePlayer = listOfPlayers.get(isAPlayer(givenName));
+        } else {
+            this.activePlayer = createPlayer(givenName);
+        }
+        console.print(activePlayer.toString()+" is now logged in");
+        pauseForReadability();
     }
 
-
-    public void playerLogout(String givenName) {
-
+    public Integer isAPlayer(String givenName){
+        for(int i = 0; i < listOfPlayers.size(); i++){
+            if(listOfPlayers.get(i).toString().equals(givenName)){
+                return i;
+            }
+        }
+        return -1;
     }
 
-
-    public String printActivePlayers() {
-        return null;
+    public Boolean getGamblingStatus(){
+        console.print("Are you a gambling player? yes/no");
+        while(true) {
+            String userInput = console.getStringInput("");
+            if (userInput.toLowerCase().equals("yes")) {
+                return true;
+            } else if (userInput.toLowerCase().equals("no")) {
+                return false;
+            } else {
+                console.print("Please enter \"yes\" or \"no\"");
+            }
+        }
     }
 
-    public void parseMenuInput() {
+    public void playerLogout() {
+        this.activePlayer = null;
+    }
+
+    public String printPlayers() {
+        StringBuilder players = new StringBuilder("Current Players:\n");
+        if(listOfPlayers.size() != 0){
+            for(Player player : listOfPlayers){
+                players.append("    "+player.toString()+"\n");
+            }
+        } else{
+            players.append("   None\n");
+        }
+        return players.toString();
+    }
+
+    public void parseMenuInput(){
         Integer input = console.getIntegerInput("Selection >");
         switch (input){
             case 1: //Login
-                //Player player = createPlayer();
-                // activePlayer = player;
+                console.print(printPlayers());
+                playerLogin(console.getStringInput("What is your name?"));
                 break;
             case 2: //GoFish
-                if(checkIfActivePlayers()){
-                    selectGame(new GoFish());
+                if(checkIfActivePlayer()){
+//                    selectGame(new GoFish());
                 } else {
                     console.println("No player currently logged in");
+                    pauseForReadability();
                 }
                 break;
             case 3: //BlackJack
-                if(checkIfActivePlayers()){
-                    selectGame(new Blackjack());
+                if(checkIfActivePlayer()){
+                    if(checkIfGamblingPlayer()){
+                        addToPlayerBalance();
+                        selectGame(new Blackjack());
+                    }
                 } else {
                     console.println("No player currently logged in");
+                    pauseForReadability();
                 }
                 break;
             case 4: // Craps
-                if(checkIfActivePlayers()){
-//                    selectGame(new CrapsGame());
+                if(checkIfActivePlayer()){
+                    if(checkIfGamblingPlayer()){
+                        addToPlayerBalance();
+                        selectGame(new CrapsGame());
+                    }
                 } else {
                     console.println("No player currently logged in");
+                    pauseForReadability();
                 }
                 break;
             case 5: // CeeLo
-                if(checkIfActivePlayers()){
-//                    selectGame(new CeeLoGame());
+                if(checkIfActivePlayer()){
+                    if(checkIfGamblingPlayer()){
+                        addToPlayerBalance();
+                        selectGame(new CeeLoGame((GamblingPlayer) activePlayer));
+                    }
                 } else {
                     console.println("No player currently logged in");
+                    pauseForReadability();
                 }
                 break;
             case 6: // Logout
-                if(checkIfActivePlayers()){
-                    String aPlayer = this.activePlayer.toString();
-                    playerLogout(aPlayer); // Needs to be re-looked at
+                if(checkIfActivePlayer()){
+                    playerLogout();
                 } else {
                     console.println("No player currently logged in");
+                    pauseForReadability();
                 }
                 break;
             case 7: // Quit
                 quit();
                 break;
             default:
-                    console.println("Please enter a valid selection (1 -> 9)");
+                console.println("Please enter a valid selection (1 -> 9)");
+                pauseForReadability();
                 break;
         }
     }
 
-    public Boolean checkIfActivePlayers() {
-        return true;
+    public void addToPlayerBalance(){
+        console.println("You currently have $"+ ((GamblingPlayer)this.activePlayer).getBalance() + " in your account");
+        console.print("Would you like to add to your balance before your game begins? yes/no");
+        while(true) {
+            String userInput = console.getStringInput("");
+            if (userInput.toLowerCase().equals("yes")) {
+                Integer balanceAdd = console.getIntegerInput("How much would you like to add?");
+                if(balanceAdd > 0){
+                    ((GamblingPlayer)this.activePlayer).deposit(balanceAdd);
+                }
+                break;
+            } else if (userInput.toLowerCase().equals("no")) {
+                break;
+            } else {
+                console.print("Please enter \"yes\" or \"no\"");
+            }
+        }
+    }
+
+    private void pauseForReadability(){
+        try{
+            Thread.sleep(1500);
+        } catch (InterruptedException e){
+            Logger logger = Logger.getLogger(Casino.class.getName());
+            logger.log(Level.INFO, e.toString());
+        }
+
+    }
+
+    public Boolean checkIfActivePlayer() {
+        if(this.activePlayer != null){
+            return true;
+        } else{
+            return false;
+        }
+    }
+
+    public Boolean checkIfGamblingPlayer(){
+        if(activePlayer instanceof GamblingPlayer){
+            return true;
+        } else {
+            console.print("Come back when you're older!");
+            pauseForReadability();
+            return false;
+        }
     }
 
     public void quit() {
-        console.println(" Thank you for playing at ZipCoder's Casino!");
+        console.println(" Thank you for playing at ZipCoder's Palace!");
         System.exit(0);
     }
 }

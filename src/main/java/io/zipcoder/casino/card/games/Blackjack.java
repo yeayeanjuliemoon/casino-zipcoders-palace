@@ -12,6 +12,7 @@ public class Blackjack extends CardGame implements GamblingGame {
     private Map<Player, Integer> playerBets;
 
     public Blackjack() {
+        super();
 
     }
 
