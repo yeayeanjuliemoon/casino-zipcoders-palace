@@ -13,6 +13,7 @@ public class CeeLoGame extends DiceGame {
 
     public CeeLoGame(GamblingPlayer player) {
         super(3, player);
+        this.player = player;
     }
 
     public Integer getPot() {
