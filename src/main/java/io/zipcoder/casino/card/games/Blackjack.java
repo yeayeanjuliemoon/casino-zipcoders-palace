@@ -5,7 +5,9 @@ import io.zipcoder.casino.card.utilities.Card;
 import io.zipcoder.casino.card.utilities.CardGame;
 import io.zipcoder.casino.card.utilities.CardRank;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,19 +28,24 @@ public class Blackjack extends CardGame implements GamblingGame {
         console.print(player.toString()+" has drawn a "+ card.toString()+"\n");
     }
 
-    public Integer countHand(Player player) {
+    public Integer countHand(List<Card> cards) {
         Integer currentValue = 0;
-        Boolean hasAce = false;
-        for(Card card: playerHands.get(player)){
+        for(Card card: cards){
             currentValue += cardValueCalculator(card);
-            if(card.getRank() == CardRank.ACE){
-                hasAce = true;
+        }
+        currentValue = aceTest(currentValue, cards);
+        return currentValue;
+    }
+
+    public Integer aceTest(Integer value, List<Card> cards){
+        if(value > 21){
+            for(Card card: cards) {
+                if (card.getRank() == CardRank.ACE) {
+                    return value - 10;
+                }
             }
         }
-        if(currentValue > 21 && hasAce){
-            currentValue -=10;
-        }
-        return currentValue;
+        return value;
     }
 
 
@@ -83,11 +90,11 @@ public class Blackjack extends CardGame implements GamblingGame {
 
     private void dealerTurn(){
         console.println("Dealer hand: "+showHand(dealer));
-        while(countHand(dealer) <=16){
+        while(countHand(playerHands.get(dealer)) <=16){
             dealCard(dealer, deck.draw());
             pauseForReadability();
         }
-        if(playerBust(countHand(dealer))){
+        if(playerBust(countHand(playerHands.get(dealer)))){
             console.println("Oh no! "+dealer.toString()+" went bust!");
         }
     }
@@ -121,15 +128,15 @@ public class Blackjack extends CardGame implements GamblingGame {
         pauseForReadability();
         while(gameState){
             nextTurn();
-            if(playerTwentyOne(countHand(activePlayer))) {
+            if(playerTwentyOne(countHand(playerHands.get(activePlayer)))) {
                 gameState = false;
                 payout();
             }
         }
-        if(!playerTwentyOne(countHand(activePlayer))) {
-            if (!playerBust(countHand(activePlayer))) {
+        if(!playerTwentyOne(countHand(playerHands.get(activePlayer)))) {
+            if (!playerBust(countHand(playerHands.get(activePlayer)))) {
                 dealerTurn();
-                if (determineWinner(countHand(activePlayer), countHand(dealer))) {
+                if (determineWinner(countHand(playerHands.get(activePlayer)), countHand(playerHands.get(dealer)))) {
                     console.println(activePlayer.toString() + " wins! You won $" + playerBets.get(activePlayer) + "\n");
                     pauseForReadability();
                     payout();
@@ -149,7 +156,7 @@ public class Blackjack extends CardGame implements GamblingGame {
         console.println("Your hand: "+showHand(activePlayer)+"\n");
         determinePlayerMove(translatePlayerChoice(parsePlayerChoice()));
 
-        if(playerBust(countHand(activePlayer))){
+        if(playerBust(countHand(playerHands.get(activePlayer)))){
            gameState = false;
         }
     }

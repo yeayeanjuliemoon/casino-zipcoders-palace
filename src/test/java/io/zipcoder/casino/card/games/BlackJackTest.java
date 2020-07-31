@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,7 +26,6 @@ public class BlackJackTest {
         blackjack = new Blackjack(player);
     }
 
-    // Refactored
     @Test
     public void dealCardTest() {
         String originalHand = blackjack.showHand(player);
@@ -41,20 +41,30 @@ public class BlackJackTest {
 
     @Test
     public void countHandTest() {
-        int actualResult = 0;
-        int expectedResult = 15;
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(CardSuit.SPADE, CardRank.ACE));
+        cards.add(new Card(CardSuit.CLUB, CardRank.JACK));
 
-        boolean matchesTest = false;
-        while(!matchesTest){
-            Blackjack blackjack = new Blackjack(player);
-            if(blackjack.showHand(player).equals("[FOUR CLUB][ACE SPADE]")){
-                actualResult = blackjack.countHand(player);
-                matchesTest = true;
-            }
-        }
+
+        int actualResult = blackjack.countHand(cards);
+        int expectedResult =21;
 
         assertEquals(expectedResult, actualResult);
     }
+
+    @Test
+    public void aceTestTest(){
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(CardSuit.SPADE, CardRank.ACE)); // Value 11
+        cards.add(new Card(CardSuit.CLUB, CardRank.JACK)); // Value 10
+        cards.add(new Card(CardSuit.HEART, CardRank.NINE)); // Value 9
+
+        int actualResult = blackjack.aceTest(30, cards);
+        int expectedResult =20;
+
+        assertEquals(expectedResult, actualResult);
+    }
+
 /*//TODO - REFACTOR TESTS AS CODE NOTED FOR REFACTOR
     @Test
     public void getPlayerChoiceTest() {
