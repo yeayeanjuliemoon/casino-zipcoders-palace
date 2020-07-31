@@ -155,7 +155,7 @@ public class Casino {
                 if(checkIfActivePlayer()){
                     if(checkIfGamblingPlayer()){
                         addToPlayerBalance();
-                        selectGame(new CeeLoGame());
+                        selectGame(new CeeLoGame((GamblingPlayer) activePlayer));
                     }
                 } else {
                     console.println("No player currently logged in");

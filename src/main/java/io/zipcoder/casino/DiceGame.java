@@ -1,6 +1,11 @@
 package io.zipcoder.casino;
 
+
 import java.util.List;
+public abstract class DiceGame implements Game, GamblingGame {
+    Dice dice;
+    Integer numberRoll;
+    Integer diceSum;
 
 public abstract class DiceGame implements Game {
     protected Dice dice;
