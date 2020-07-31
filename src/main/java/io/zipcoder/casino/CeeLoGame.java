@@ -8,16 +8,21 @@ public class CeeLoGame extends DiceGame {
     private Integer pot;
     private GamblingPlayer player;
     private Integer playerScore = 0;
+    private Console console = new Console(System.in, System.out);
 
     public CeeLoGame(GamblingPlayer player) {
         this.player = player;
     }
 
     public Integer getPot() {
-        return pot;
+        return this.pot;
     }
 
     public void takeBet(Integer bet) {
+        while(bet > player.getBalance()) {
+            bet = this.console.getIntegerInput("Amount is greater than your current balance. Please enter in a valid amount");
+        }
+
         this.pot = 2 * bet;
     }
 
@@ -29,6 +34,8 @@ public class CeeLoGame extends DiceGame {
 
     public String checkPlayer(Integer[] diceValues) {
         String winner = "";
+        this.console.println("You roll is: " + diceValues[0] + ", " + diceValues[1] + ", " + diceValues[2]);
+
         List<Integer> combination = Arrays.asList(diceValues);
 
         if(combination.contains(4) && combination.contains(5) && combination.contains(6)) {
@@ -56,6 +63,8 @@ public class CeeLoGame extends DiceGame {
 
     public String checkHouse(Integer[] diceValues) {
         String winner = "";
+        this.console.println("House rolls: " + diceValues[0] + ", " + diceValues[1] + ", " + diceValues[2]);
+
         List<Integer> combination = Arrays.asList(diceValues);
 
         if(combination.contains(4) && combination.contains(5) && combination.contains(6)) {
@@ -82,21 +91,59 @@ public class CeeLoGame extends DiceGame {
     }
 
     public void play() {
-        Boolean replay = true;
-        while(replay) {
-            String playerTurn = checkPlayer(getDiceRoll());
-            String houseTurn = checkHouse(getDiceRoll());
+        String userString = this.console.getStringInput("Welcome to CeeLo! Would you like to bet? yes/no");
+        while(!userString.toLowerCase().equals("yes") && !userString.toLowerCase().equals("no")) {
+            userString = this.console.getStringInput("This input is invalid. Please enter a yes/no.");
+        }
 
-            if(!playerTurn.equals("") && !houseTurn.equals("")) {
-                replay = false;
-                if(playerTurn.equals("Player") || houseTurn.equals("Player")) {
-                    payout();
-                }
-
+        if((userString.toLowerCase().equals("no"))){
+            exit();
+            return;
+        } else if(userString.toLowerCase().equals("yes")) {
+            takeBet(this.console.getIntegerInput("How much would you like to bet?"));
+            this.console.println("The current pot is this amount: " + this.getPot());
+            String playerString = this.console.getStringInput("Would you like to see the rules?");
+            if (playerString.toLowerCase().equals("yes")) {
+                this.console.println(this.printGameRules());
             }
         }
 
-    }
+
+            Boolean replay = true;
+            while (replay) {
+                this.console.getStringInput("Press enter to roll the dice.");
+                String playerTurn = checkPlayer(getDiceRoll());
+                String houseTurn = checkHouse(getDiceRoll());
+
+                if (!playerTurn.equals("") && !houseTurn.equals("")) {
+                    replay = false;
+                    if (playerTurn.equals("Player") || houseTurn.equals("Player")) {
+                        this.console.println("The Player wins");
+                        this.console.println("This amount will be deposited to your account: " + this.getPot());
+                        payout();
+                        this.console.println("Your new balance is:" + player.getBalance());
+                        this.console.println("Your score is: " + printScore());
+                        String continueOrLeave = this.console.getStringInput("Would you like to play again? yes/no");
+                        if(continueOrLeave.equals("yes")) {
+                            replay = true;
+                            takeBet(this.console.getIntegerInput("How much would you like to bet?"));
+                            this.console.println("The current pot is this amount: " + this.getPot());
+                        }
+                        exit();
+                    } else if (playerTurn.equals("House") || houseTurn.equals("House")) {
+                        this.console.println("The House wins");
+                        this.console.println("Your score is " + printScore());
+                        String continueOrLeave = this.console.getStringInput("Would you like to play again? yes/no");
+                        if(continueOrLeave.equals("yes")) {
+                            replay = true;
+                            takeBet(this.console.getIntegerInput("How much would you like to bet?"));
+                            this.console.println("The current pot is this amount: " + this.getPot());
+                        }
+                    }
+                }
+            }
+        }
+
 
     public void nextTurn() {
     }
@@ -113,26 +160,27 @@ public class CeeLoGame extends DiceGame {
     }
 
     public String printGameRules() {
-        String rules = "Automatic Win: Player wins automatically if one of the following combinations are rolled: \n" +
+        String rules =
+                "======================================================================================= \n" +
+                "Automatic Win: Player wins automatically if one of the following combinations are rolled: \n" +
                 " 4-5-6, triples of same number, doubles with same number with a third showing a 6\n" +
                 "Automatic Loss: Player loses automatically if one of the following combinations are rolled: \n" +
                 "1-2-3, doubles with same number with third showing a 1\n" +
-                "Re-roll: When none of the above combinations are rolled, player needs to re-roll until oen of the above combinations are rolled.";
+                "Re-roll: When none of the above combinations are rolled, player needs to re-roll until one of the above combinations are rolled.\n" +
+                "=======================================================================================";
 
         return rules;
     }
 
     public void exit() {
+        this.console.println("Thank you for playing CeeLo!");
 
     }
 
     public void payout() {
         player.deposit(getPot());
-        player.getBalance();
         playerScore++;
         this.pot = 0;
     }
-
-
-    }
+}
 

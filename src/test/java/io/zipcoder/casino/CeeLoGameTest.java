@@ -10,6 +10,8 @@ public class CeeLoGameTest {
         GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
         CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
 
+        gamblingPlayer.deposit(100);
+
         ceeLoGame.takeBet(100);
 
         Integer expected = 200;
@@ -89,11 +91,13 @@ public class CeeLoGameTest {
         CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
 
         String actual = ceeLoGame.printGameRules();
-        String expected = "Automatic Win: Player wins automatically if one of the following combinations are rolled: \n" +
+        String expected = "======================================================================================= \n" +
+                "Automatic Win: Player wins automatically if one of the following combinations are rolled: \n" +
                 " 4-5-6, triples of same number, doubles with same number with a third showing a 6\n" +
                 "Automatic Loss: Player loses automatically if one of the following combinations are rolled: \n" +
                 "1-2-3, doubles with same number with third showing a 1\n" +
-                "Re-roll: When none of the above combinations are rolled, player needs to re-roll until oen of the above combinations are rolled.";
+                "Re-roll: When none of the above combinations are rolled, player needs to re-roll until one of the above combinations are rolled.\n" +
+                "=======================================================================================";
 
         Assert.assertEquals(expected, actual);
     }
