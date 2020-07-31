@@ -1,15 +1,10 @@
 package io.zipcoder.casino;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-import io.zipcoder.casino.Player;
-import io.zipcoder.casino.CrapsWager;
-import io.zipcoder.casino.DiceGame;
 import io.zipcoder.casino.card.utilities.CrapsWagerType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,7 +12,7 @@ import java.util.logging.Logger;
 public class CrapsGame extends DiceGame implements GamblingGame {
 
     private CrapsWager playerWager = new CrapsWager();
-    private Integer roundNum;
+    private Integer roundNum = 1;
     private Integer point;
     private final Console console = new Console(System.in, System.out);
     private Boolean gameState;
@@ -39,7 +34,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
                 console.println("You can only bet PASS/DONTPASS on round 1!");
             }
             else{
-                Integer amountWagered = console.getIntegerInput("How much would you like to bet? ");
+                Integer amountWagered = parseBet();
                 switch(wagerType){
                     case PASS:
                         this.playerWager.setPass(amountWagered);
@@ -68,10 +63,20 @@ public class CrapsGame extends DiceGame implements GamblingGame {
         this.roundNum = 0;
     }
 
+    private Integer parseBet(){
+        Integer amountWagered = console.getIntegerInput("How much would you like to bet? ");
+        if(amountWagered <= this.activePlayer.getBalance()){
+            return amountWagered;
+        }
+        else{
+            console.println("Insufficient Funds");
+            return parseBet();
+        }
+    }
+
     @Override
     public void takeBet() {
-        // Capture what type of bet
-        // invoke method for that kind of bet
+
     }
 
     @Override
@@ -122,7 +127,6 @@ public class CrapsGame extends DiceGame implements GamblingGame {
 
     public void play(){
         console.println(printGameRules());
-
         pauseForReadability();
         while(gameState){
             nextTurn();
@@ -142,7 +146,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
         // if game > 1 and returned 7, change gameState
         getRoundOneWager();
         this.dice.rollDice();
-        printDiceValues();
+        console.println(printDiceValues());
         payout();
     }
 

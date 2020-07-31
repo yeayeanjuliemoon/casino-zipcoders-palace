@@ -10,7 +10,7 @@ public class CeeLoGame extends DiceGame {
     public Integer pot;
 
     public CeeLoGame(){
-
+        super(2);
     }
 
     private void decideRoundBet(){
