@@ -16,7 +16,7 @@ public class CrapsGameTest {
     @Test
     public void payoutTest() {
         String winningOutput = "Enter the type of wager you would like to make: \n"+
-        "How much would you like to bet? \n[ 6 5 ]\n";
+        "How much would you like to bet? \nBetting $50 on PASS\nRolling the dice....\n[ 6 ][ 5 ]\nYou now have $100 in your account\n";
         boolean nonwinningState = true;
 
         GamblingPlayer player = new GamblingPlayer("Bender");
@@ -68,17 +68,22 @@ public class CrapsGameTest {
 
     @Test
     public void printGameRulesTest() {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PrintStream outboundMessaging = new PrintStream(outputStream);
-        System.setOut(outboundMessaging);
-
         GamblingPlayer player = new GamblingPlayer("WhyNotZoidberg");
         CrapsGame craps = new CrapsGame(player);
 
-        craps.printGameRules();
-
-        String actualOutput = outputStream.toString();
-        String expectedOutput = "THA RULEZ";
+        String actualOutput = craps.printGameRules();
+        String expectedOutput = "==========Craps===========\n" + "Craps is a game where you roll a pair of dice multiple times\n" +
+                "and bet on the outcome. The first round you can only make pass or don't pass\n" +
+                "bets. The outcome of the first round becomes the \"point\" value\n" + "There are 5 possible wagers:\n"
+                + "\tpass - On the first round, you are betting that the dice will equal 7 or 11\n" +
+                "\tpast the first round, you are betting that the dice will hit the point value (2x Odds)\n\n" +
+                "\tdontpass - On the first round, you are  betting that the dice will hit \"craps\"\n" +
+                "\t(2, 3, or 12), past the first round, you are betting that the dice will hit a\n" +
+                "\t7 before the point value (2x Odds)\n\n" + "\tfield - Past the first round, you are betting that the dice will hit a 2, 3, 4\n" +
+                "\t9, 10, 11, 12 (3x Odds)\n\n" + "\tsevens - Past the first round, you are betting that the dice will roll a 7 (5x Odds)\n\n" +
+                "\tanycraps - Past the first round, you are betting that the dice will hit craps (7x Odds)\n\n" +
+                "Each round, enter the type bet you would like to make and the amount you want to bet. Enter\n" +
+                "'none' when you are done betting for each round.\n\n Good Luck!\n";
 
         assertEquals(expectedOutput, actualOutput);
     }
