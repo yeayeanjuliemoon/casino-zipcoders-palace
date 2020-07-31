@@ -4,6 +4,7 @@ import io.zipcoder.casino.GamblingPlayer;
 import io.zipcoder.casino.card.utilities.Card;
 import io.zipcoder.casino.card.utilities.CardRank;
 import io.zipcoder.casino.card.utilities.CardSuit;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -14,24 +15,32 @@ import static org.junit.Assert.*;
 
 public class BlackJackTest {
 
+    GamblingPlayer player;
+    Blackjack blackjack;
+    Logger logger = Logger.getLogger(BlackJackTest.class.getName());
+
+    @Before
+    public void init() {
+        player = new GamblingPlayer("aName");
+        blackjack = new Blackjack(player);
+    }
+
+    // Refactored
     @Test
     public void dealCardTest() {
-        GamblingPlayer player = new GamblingPlayer("Zed");
-        Blackjack blackjack = new Blackjack(player);
-
         String originalHand = blackjack.showHand(player);
-        blackjack.dealCard(player);
+        Card card = new Card(CardSuit.SPADE, CardRank.ACE);
+        String givenCard = card.toString();
+
+        blackjack.dealCard(player, card);
         String dealtHand = blackjack.showHand(player);
+        String handDifference = dealtHand.substring(originalHand.length());
 
-        Logger logger = Logger.getLogger(BlackJackTest.class.getName());
-        logger.log(Level.INFO, dealtHand);
-
-        assertNotEquals(originalHand, dealtHand);
+        assertEquals(givenCard, handDifference);
     }
 
     @Test
     public void countHandTest() {
-        GamblingPlayer player = new GamblingPlayer("Ted");
         int actualResult = 0;
         int expectedResult = 15;
 
@@ -46,13 +55,11 @@ public class BlackJackTest {
 
         assertEquals(expectedResult, actualResult);
     }
-
+/*//TODO - REFACTOR TESTS AS CODE NOTED FOR REFACTOR
     @Test
     public void getPlayerChoiceTest() {
         ByteArrayInputStream in = new ByteArrayInputStream(("no").getBytes());
         System.setIn(in);
-        GamblingPlayer player = new GamblingPlayer("Red");
-        Blackjack blackjack = new Blackjack(player);
 
         Boolean actualResult = blackjack.getPlayerChoice();
 
@@ -64,8 +71,6 @@ public class BlackJackTest {
         ByteArrayInputStream in = new ByteArrayInputStream(("no").getBytes());
         System.setIn(in);
 
-        GamblingPlayer player = new GamblingPlayer("Sed");
-        Blackjack blackjack = new Blackjack(player);
         while(blackjack.countHand(player) < 22){
             blackjack.dealCard(player);
         }
@@ -79,8 +84,7 @@ public class BlackJackTest {
     public void takeBetTest() {
         ByteArrayInputStream in = new ByteArrayInputStream(("20").getBytes());
         System.setIn(in);
-        GamblingPlayer player = new GamblingPlayer("Red");
-        Blackjack blackjack = new Blackjack(player);
+
         player.deposit(20);
 
         blackjack.takeBet();
@@ -94,8 +98,7 @@ public class BlackJackTest {
     public void payoutTest() {
         ByteArrayInputStream in = new ByteArrayInputStream(("20").getBytes());
         System.setIn(in);
-        GamblingPlayer player = new GamblingPlayer(null);
-        Blackjack blackjack = new Blackjack(player);
+
         player.deposit(20);
 
         blackjack.takeBet();
@@ -109,8 +112,7 @@ public class BlackJackTest {
     public void payBackTest() {
         ByteArrayInputStream in = new ByteArrayInputStream(("20").getBytes());
         System.setIn(in);
-        GamblingPlayer player = new GamblingPlayer("ted");
-        Blackjack blackjack = new Blackjack(player);
+
         player.deposit(20);
 
         blackjack.takeBet();
@@ -124,8 +126,7 @@ public class BlackJackTest {
     public void playTest() {
         ByteArrayInputStream in = new ByteArrayInputStream(("20"+ System.lineSeparator() + "no").getBytes());
         System.setIn(in);
-        GamblingPlayer player = new GamblingPlayer("Ned");
-        Blackjack blackjack = new Blackjack(player);
+
         int startBalance = 40;
         player.deposit(startBalance);
 
@@ -140,8 +141,7 @@ public class BlackJackTest {
     public void nextTurnTest() {
         ByteArrayInputStream in = new ByteArrayInputStream(("no").getBytes());
         System.setIn(in);
-        GamblingPlayer player = new GamblingPlayer("Jed");
-        Blackjack blackjack = new Blackjack(player);
+
 
         blackjack.nextTurn();
         boolean dontContinueTurn = blackjack.checkGameState();
@@ -151,7 +151,7 @@ public class BlackJackTest {
 
     @Test
     public void playerTwentyOneTest() {
-        GamblingPlayer player = new GamblingPlayer("BlackJackFred");
+
         boolean actualResult = false;
 
         boolean matchesTest = false;
@@ -172,8 +172,7 @@ public class BlackJackTest {
 
     @Test
     public void cardValueCalculatorTest() {
-        GamblingPlayer player = new GamblingPlayer("ted");
-        Blackjack blackjack = new Blackjack(player);
+
         Card card = new Card(CardSuit.SPADE, CardRank.ACE);
 
         int expectedValue = 11;
@@ -184,8 +183,7 @@ public class BlackJackTest {
 
     @Test
     public void printGameRulesTest() {
-        GamblingPlayer player = new GamblingPlayer("ted");
-        Blackjack blackjack = new Blackjack(player);
+
 
         String expectedRules ="* The goal of the game is to beat the dealer's hand without going over 21\n" +
                 "* You and the dealer start with two cards. One of the dealer's cards is hidden until their turn.\n"+
@@ -195,5 +193,5 @@ public class BlackJackTest {
 
 
         assertEquals(expectedRules, actualRules);
-    }
+    }*/
 }

@@ -21,10 +21,9 @@ public class Blackjack extends CardGame implements GamblingGame {
         playerBets = new HashMap<>();
     }
 
-    public void dealCard(Player player) {
-        Card card = deck.draw();
-        console.print(player.toString()+" has drawn a "+ card.toString()+"\n");
+    public void dealCard(Player player, Card card) {
         playerHands.get(player).add(card);
+        console.print(player.toString()+" has drawn a "+ card.toString()+"\n");
     }
 
     public Integer countHand(Player player) {
@@ -42,24 +41,39 @@ public class Blackjack extends CardGame implements GamblingGame {
         return currentValue;
     }
 
-    public Boolean getPlayerChoice() {
-        console.print("Would you like another card? yes/no");
-        while(true) {
-            String userInput = console.getStringInput("");
-            if (userInput.toLowerCase().equals("yes")) {
-                return true;
-            } else if (userInput.toLowerCase().equals("no")) {
-                return false;
-            } else {
-                console.print("Please enter \"yes\" or \"no\"");
+
+    public void determinePlayerMove(Boolean choice){
+        try{
+            if(choice){ // Player chose to draw another card
+                dealCard(activePlayer, deck.draw());
+            } else { // Player chose not to draw another card
+                gameState = false;
             }
+        } catch(NullPointerException e){ // Bad player input
+            determinePlayerMove(translatePlayerChoice(parsePlayerChoice()));
+        }
+    }
+    public Boolean translatePlayerChoice(String playerInput) {
+        if (playerInput.equals("yes")) {
+            return true;
+        } else if (playerInput.equals("no")) {
+            return false;
+        } else {
+            console.print("Please enter \"yes\" or \"no\"\n");
+            return null;
         }
     }
 
-    public Boolean playerBust(Player player) {
-        if(countHand(player) > 21){
-            console.println("Oh no! "+player.toString()+" went bust!");
-            playerBets.replace(player,-1);
+    private String parsePlayerChoice(){
+        console.print("Would you like another card? yes/no");
+        String playerInput = console.getStringInput("");
+        return playerInput.toLowerCase();
+    }
+
+    public Boolean playerBust(Integer playerHand) {
+        if(playerHand > 21){
+
+
             pauseForReadability();
             return true;
         } else {
@@ -70,11 +84,11 @@ public class Blackjack extends CardGame implements GamblingGame {
     private void dealerTurn(){
         console.println("Dealer hand: "+showHand(dealer));
         while(countHand(dealer) <=16){
-            dealCard(dealer);
+            dealCard(dealer, deck.draw());
             pauseForReadability();
         }
-        if(playerBust(dealer)){
-            playerBets.replace(dealer,-1);
+        if(playerBust(countHand(dealer))){
+            console.println("Oh no! "+dealer.toString()+" went bust!");
         }
     }
 
@@ -107,13 +121,24 @@ public class Blackjack extends CardGame implements GamblingGame {
         pauseForReadability();
         while(gameState){
             nextTurn();
-        }
-        if(playerTwentyOne()){
-            payout();
-        } else if(playerBets.get(activePlayer) >= 0) {
-            dealerTurn();
-            if(determineWinner()){
+            if(playerTwentyOne(countHand(activePlayer))) {
+                gameState = false;
                 payout();
+            }
+        }
+        if(!playerTwentyOne(countHand(activePlayer))) {
+            if (!playerBust(countHand(activePlayer))) {
+                dealerTurn();
+                if (determineWinner(countHand(activePlayer), countHand(dealer))) {
+                    console.println(activePlayer.toString() + " wins! You won $" + playerBets.get(activePlayer) + "\n");
+                    pauseForReadability();
+                    payout();
+                } else {
+                    console.println("Dealer wins.\n");
+                    pauseForReadability();
+                }
+            } else {
+                console.println("Oh no! " + activePlayer.toString() + " went bust!");
             }
         }
         exit();
@@ -121,42 +146,52 @@ public class Blackjack extends CardGame implements GamblingGame {
     }
 
     public void nextTurn() {
-        console.println("Your hand: "+showHand(activePlayer));
-        Boolean choice = getPlayerChoice();
-        if(choice){
-            dealCard(activePlayer);
-        } else {
-            gameState = false;
-        }
-        if(playerBust(activePlayer)){
+        console.println("Your hand: "+showHand(activePlayer)+"\n");
+        determinePlayerMove(translatePlayerChoice(parsePlayerChoice()));
+
+        if(playerBust(countHand(activePlayer))){
            gameState = false;
         }
     }
 
-    public Boolean playerTwentyOne(){
-        if(countHand(activePlayer).equals(21)){
-            console.println(activePlayer.toString() + " wins! You won " + playerBets.get(activePlayer) * 2);
+    public Boolean playerTwentyOne(Integer handValue){
+        if(handValue.equals(21)){
+            console.println(activePlayer.toString() + " wins! You won $" + playerBets.get(activePlayer));
             return true;
         }
         return false;
     }
 
-    private Boolean determineWinner() {
-        if ((countHand(activePlayer) > countHand(dealer)) || (playerBets.get(dealer) < 0)) {
-            console.println(activePlayer.toString() + " wins! You won " + playerBets.get(activePlayer) * 2);
-            pauseForReadability();
+    private Boolean determineWinner(Integer playerHand, Integer dealerHand) {
+        if (endCaseWinningHand(playerHand, dealerHand)){
             return true;
-        } else if(countHand(activePlayer) == countHand(dealer)){
-            console.println("Game ends in a draw.");
-            payBack();
+        } else if(endCaseDraw(playerHand, dealerHand)){
             return false;
         }else{
-            console.println("Dealer wins.");
-            pauseForReadability();
             return false;
         }
     }
 
+    public Boolean endCaseWinningHand(Integer playerHand, Integer dealerHand){
+        if((playerHand > dealerHand) || (playerBust(dealerHand))) {
+            pauseForReadability();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Boolean endCaseDraw(Integer playerHand, Integer dealerHand){
+        if(playerHand == dealerHand) {
+            console.println("Game ends in a draw.\n");
+            payBack();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // TODO - REFACTOR TO ENUM
     public int cardValueCalculator(Card card){
         int returnValue;
         switch (card.getRank()){
@@ -217,6 +252,7 @@ public class Blackjack extends CardGame implements GamblingGame {
         return rules;
     }
 
+    // TODO - Look into libraries for delaying system printing vs halting whole thread
     private void pauseForReadability(){
         try{
             Thread.sleep(1000);
