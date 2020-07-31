@@ -1,5 +1,6 @@
 package io.zipcoder.casino;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -13,38 +14,24 @@ public class DiceTest {
 
     @Test
     public void testDiceConstructor(){
-        Integer expected = 3;
-        Dice dice = new Dice(expected);
-
-        Integer actual = dice.getDieValues().size();
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    public void testDiceGetValues(){
-        List<Integer> expected = new ArrayList<Integer>(Arrays.asList(1, 1, 1));
         Dice dice = new Dice(3);
 
-        List<Integer> actual = dice.getDieValues();
+        List<Integer> actual = dice.getDiceValues();
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(3, actual.size());
     }
 
     @Test
-    public void testDiceRoll(){
-        int numDice = 3;
-        Dice dice = new Dice(numDice);
+    public void testRollDice() {
+        Dice dice = new Dice(3);
         dice.rollDice();
 
-        List<Integer> result = dice.getDieValues();
+        List<Integer> actual = dice.getDiceValues();
 
-        for(int i = 0; i < numDice; i++){
-            assertTrue((result.get(i) >= 1) || (result.get(i) <= 6));
-        }
+        Assert.assertNotNull(actual.get(0));
+        Assert.assertNotNull(actual.get(1));
+        Assert.assertNotNull(actual.get(2));
     }
 
+    }
 
-
-
-}
