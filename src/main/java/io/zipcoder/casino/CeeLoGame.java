@@ -12,7 +12,7 @@ public class CeeLoGame extends DiceGame {
     private Console console = new Console(System.in, System.out);
 
     public CeeLoGame(GamblingPlayer player) {
-        this.player = player;
+        super(3, player);
     }
 
     public Integer getPot() {
