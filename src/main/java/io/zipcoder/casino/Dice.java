@@ -1,23 +1,36 @@
 package io.zipcoder.casino;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Dice {
-    private Integer[] diceValues;
+
+    private List<Integer> dieValues;
+    private Integer numDice;
 
     public Dice(Integer numDice){
-        this.diceValues = new Integer[numDice];
+        this.numDice = numDice;
+        this.dieValues = new ArrayList<>();
+        initializeDice();
     }
 
     public void rollDice(){
         Random rand = new Random();
-        for(int i = 0; i < diceValues.length; i++){
-            this.diceValues[i] = (rand.nextInt(6) + 1);
+        this.dieValues.clear();
+        for(int i = 0; i < numDice; i++){
+            this.dieValues.add(rand.nextInt(6) + 1);
         }
     }
 
-    public Integer[] getDiceValues(){
-        return this.diceValues;
+    public List<Integer> getDiceValues(){
+        return this.dieValues;
+    }
+
+    private void initializeDice() {
+        for(int i = 0; i < numDice; i++) {
+            this.dieValues.add(i);
+        }
     }
 
 }

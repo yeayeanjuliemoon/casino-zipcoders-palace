@@ -90,11 +90,6 @@ public class Blackjack extends CardGame implements GamblingGame {
         }
     }
 
-    @Override
-    public void takeBet(Integer bet) {
-
-    }
-
     public void payout() {
         int winnings = playerBets.get(activePlayer)*2;
         ((GamblingPlayer) this.activePlayer).deposit(winnings);

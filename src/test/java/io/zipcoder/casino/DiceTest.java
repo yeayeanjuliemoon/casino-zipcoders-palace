@@ -16,9 +16,9 @@ public class DiceTest {
     public void testDiceConstructor(){
         Dice dice = new Dice(3);
 
-        Integer[] actual = dice.getDiceValues();
+        List<Integer> actual = dice.getDiceValues();
 
-        Assert.assertEquals(3, actual.length);
+        Assert.assertEquals(3, actual.size());
     }
 
     @Test
@@ -26,11 +26,11 @@ public class DiceTest {
         Dice dice = new Dice(3);
         dice.rollDice();
 
-        Integer[] actual = dice.getDiceValues();
+        List<Integer> actual = dice.getDiceValues();
 
-        Assert.assertNotNull(actual[0]);
-        Assert.assertNotNull(actual[1]);
-        Assert.assertNotNull(actual[2]);
+        Assert.assertNotNull(actual.get(0));
+        Assert.assertNotNull(actual.get(1));
+        Assert.assertNotNull(actual.get(2));
     }
 
     }

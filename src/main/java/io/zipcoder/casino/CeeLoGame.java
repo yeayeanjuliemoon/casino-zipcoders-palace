@@ -26,64 +26,60 @@ public class CeeLoGame extends DiceGame {
         this.pot = 2 * bet;
     }
 
-    public Integer[] getDiceRoll() {
+    public List<Integer> getDiceRoll() {
         Dice dice = new Dice(3);
         dice.rollDice();
         return dice.getDiceValues();
     }
 
-    public String checkPlayer(Integer[] diceValues) {
+    public String checkPlayer(List<Integer> diceValues) {
         String winner = "";
-        this.console.println("You roll is: " + diceValues[0] + ", " + diceValues[1] + ", " + diceValues[2]);
+        this.console.println("You roll is: " + diceValues.get(0) + ", " + diceValues.get(1) + ", " + diceValues.get(2));
 
-        List<Integer> combination = Arrays.asList(diceValues);
-
-        if(combination.contains(4) && combination.contains(5) && combination.contains(6)) {
+        if(diceValues.contains(4) && diceValues.contains(5) && diceValues.contains(6)) {
             winner = "Player";
-        } else if(combination.get(0).equals(combination.get(1)) && combination.get(1).equals(combination.get(2))) {
+        } else if(diceValues.get(0).equals(diceValues.get(1)) && diceValues.get(1).equals(diceValues.get(2))) {
             winner = "Player";
-        } else if(combination.get(0).equals(combination.get(1)) && combination.contains(6)) {
+        } else if(diceValues.get(0).equals(diceValues.get(1)) && diceValues.contains(6)) {
             winner = "Player";
-        } else if(combination.get(1).equals(combination.get(2)) && combination.contains(6)) {
+        } else if(diceValues.get(1).equals(diceValues.get(2)) && diceValues.contains(6)) {
             winner = "Player";
-        } else if(combination.get(0).equals(combination.get(2)) && combination.contains(6)) {
+        } else if(diceValues.get(0).equals(diceValues.get(2)) && diceValues.contains(6)) {
             winner = "Player";
-        } else if(combination.contains(1) == combination.contains(2) == combination.contains(3)) {
+        } else if(diceValues.contains(1) == diceValues.contains(2) == diceValues.contains(3)) {
             winner = "House";
-        } else if(combination.get(0).equals(combination.get(1)) && combination.contains(1)) {
+        } else if(diceValues.get(0).equals(diceValues.get(1)) && diceValues.contains(1)) {
             winner = "House";
-        } else if(combination.get(1).equals(combination.get(2)) && combination.contains(1)) {
+        } else if(diceValues.get(1).equals(diceValues.get(2)) && diceValues.contains(1)) {
             winner = "House";
-        } else if(combination.get(0).equals(combination.get(2)) && combination.contains(1)) {
+        } else if(diceValues.get(0).equals(diceValues.get(2)) && diceValues.contains(1)) {
             winner = "House";
         }
 
         return winner;
     }
 
-    public String checkHouse(Integer[] diceValues) {
+    public String checkHouse(List<Integer> diceValues) {
         String winner = "";
-        this.console.println("House rolls: " + diceValues[0] + ", " + diceValues[1] + ", " + diceValues[2]);
+        this.console.println("House rolls: " + diceValues.get(0) + ", " + diceValues.get(1) + ", " + diceValues.get(2));
 
-        List<Integer> combination = Arrays.asList(diceValues);
-
-        if(combination.contains(4) && combination.contains(5) && combination.contains(6)) {
+        if(diceValues.contains(4) && diceValues.contains(5) && diceValues.contains(6)) {
             winner = "House";
-        } else if(combination.get(0) == combination.get(1) && combination.get(1) == combination.get(2)) {
+        } else if(diceValues.get(0) == diceValues.get(1) && diceValues.get(1) == diceValues.get(2)) {
             winner = "House";
-        } else if(combination.get(0) == combination.get(1) && combination.contains(6)) {
+        } else if(diceValues.get(0) == diceValues.get(1) && diceValues.contains(6)) {
             winner = "House";
-        } else if(combination.get(1) == combination.get(2) && combination.contains(6)) {
+        } else if(diceValues.get(1) == diceValues.get(2) && diceValues.contains(6)) {
             winner = "House";
-        } else if(combination.get(0) == combination.get(2) && combination.contains(6)) {
+        } else if(diceValues.get(0) == diceValues.get(2) && diceValues.contains(6)) {
             winner = "House";
-        } else if(combination.contains(1) == combination.contains(2) == combination.contains(3)) {
+        } else if(diceValues.contains(1) == diceValues.contains(2) == diceValues.contains(3)) {
             winner = "Player";
-        } else if(combination.get(0) == combination.get(1) && combination.contains(1)) {
+        } else if(diceValues.get(0) == diceValues.get(1) && diceValues.contains(1)) {
             winner = "Player";
-        } else if(combination.get(1) == combination.get(2) && combination.contains(1)) {
+        } else if(diceValues.get(1) == diceValues.get(2) && diceValues.contains(1)) {
             winner = "Player";
-        } else if(combination.get(0) == combination.get(2) && combination.contains(1)) {
+        } else if(diceValues.get(0) == diceValues.get(2) && diceValues.contains(1)) {
             winner = "Player";
         }
 
@@ -174,6 +170,11 @@ public class CeeLoGame extends DiceGame {
 
     public void exit() {
         this.console.println("Thank you for playing CeeLo!");
+
+    }
+
+    @Override
+    public void takeBet() {
 
     }
 

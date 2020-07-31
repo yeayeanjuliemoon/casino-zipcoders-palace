@@ -3,6 +3,9 @@ package io.zipcoder.casino;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CeeLoGameTest {
 
     @Test
@@ -25,12 +28,12 @@ public class CeeLoGameTest {
         GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
         CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
 
-        Integer[] actual = ceeLoGame.getDiceRoll();
-        Assert.assertEquals(3, actual.length);
+        List<Integer> actual = ceeLoGame.getDiceRoll();
+        Assert.assertEquals(3, actual.size());
 
-        Assert.assertNotNull(actual[0]);
-        Assert.assertNotNull(actual[1]);
-        Assert.assertNotNull(actual[2]);
+        Assert.assertNotNull(actual.get(0));
+        Assert.assertNotNull(actual.get(1));
+        Assert.assertNotNull(actual.get(2));
     }
 
     @Test
@@ -38,14 +41,20 @@ public class CeeLoGameTest {
         GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
         CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
 
-        Integer[] testArray1 = new Integer[] {4, 5, 6};
+        List<Integer> testArray1 = new ArrayList<>();
+        testArray1.add(4);
+        testArray1.add(5);
+        testArray1.add(6);
 
         String expected = "Player";
         String actual = ceeLoGame.checkPlayer(testArray1);
 
         Assert.assertEquals(expected, actual);
 
-        Integer[] testArray2 = new Integer[] {1, 1, 6};
+        List<Integer> testArray2 = new ArrayList<>();
+        testArray2.add(1);
+        testArray2.add(1);
+        testArray2.add(6);
 
         String expected1 = "Player";
         String actual1 = ceeLoGame.checkPlayer(testArray2);
@@ -59,14 +68,20 @@ public class CeeLoGameTest {
         GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
         CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
 
-        Integer[] testArray1 = new Integer[] {4, 5, 6};
+        List<Integer> testArray1 = new ArrayList<>();
+        testArray1.add(4);
+        testArray1.add(5);
+        testArray1.add(6);
 
         String expected = "House";
         String actual = ceeLoGame.checkHouse(testArray1);
 
         Assert.assertEquals(expected, actual);
 
-        Integer[] testArray2 = new Integer[] {1, 1, 6};
+        List<Integer> testArray2 = new ArrayList<>();
+        testArray2.add(1);
+        testArray2.add(1);
+        testArray2.add(6);
 
         String expected1 = "House";
         String actual1 = ceeLoGame.checkHouse(testArray2);
