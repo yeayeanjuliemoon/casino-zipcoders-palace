@@ -144,7 +144,7 @@ public class Casino {
                 if(checkIfActivePlayer()){
                     if(checkIfGamblingPlayer()){
                         addToPlayerBalance();
-//                        selectGame(new CrapsGame());
+                        selectGame(new CrapsGame((GamblingPlayer) this.activePlayer));
                     }
                 } else {
                     console.println("No player currently logged in");

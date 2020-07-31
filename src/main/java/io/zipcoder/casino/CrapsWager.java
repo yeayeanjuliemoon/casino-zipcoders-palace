@@ -1,11 +1,11 @@
 package io.zipcoder.casino;
 
 public class CrapsWager {
-    private Integer pass;
-    private Integer dontPass;
-    private Integer fieldWager;
-    private Integer seven;
-    private Integer anyCraps;
+    private Integer pass = 0;
+    private Integer dontPass = 0;
+    private Integer fieldWager = 0;
+    private Integer seven = 0;
+    private Integer anyCraps = 0;
 
     public CrapsWager(){
 
@@ -49,5 +49,10 @@ public class CrapsWager {
 
     public void setAnyCraps(Integer anyCraps) {
         this.anyCraps = anyCraps;
+    }
+
+    public String toString(){
+        return "$" + this.pass + " on pass\n" + "$" + this.dontPass + " on don't pass\n" + "$" + this.seven + " on sevens\n" +
+                "$" + this.fieldWager + " on the field\n" + "$" + this.anyCraps + " on any craps\n";
     }
 }
