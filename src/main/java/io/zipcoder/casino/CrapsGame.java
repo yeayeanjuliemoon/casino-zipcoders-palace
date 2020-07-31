@@ -6,66 +6,60 @@ import io.zipcoder.casino.DiceGame;
 
 import java.util.Map;
 
-public class CrapsGame extends DiceGame {
-
-    private Map<Player, CrapsWager> playerWagerMap;
-    private Integer roundNum;
-    private Integer point;
-
-    public CrapsGame(){
-        super();
-    }
-
-    private void getRoundOneWager(){
-
-    }
-
-    private void getAllWagers(){
-
-    }
-
-    private void resetWagers(){
-
-    }
-
-    private void resetRoundNumber(){
-
-    }
-
-    private void setPoint(Integer point){
-        this.point = point;
-    }
-
-
-    public void takeBet(Integer bet) {
-
-    }
-
-    public void payout() {
-
-    }
-
-    public void play() {
-
-    }
-
-    public void nextTurn() {
-
-    }
-
-    public Boolean checkGameState() {
-        return null;
-    }
-
-    public String printScore() {
-        return null;
-    }
-
-    public String printGameRules() {
-        return null;
-    }
-
-    public void exit() {
-
-    }
-}
+//public class CrapsGame extends DiceGame {
+//
+//    private Map<Player, CrapsWager> playerWagerMap;
+//    private Integer roundNum;
+//    private Integer point;
+//
+//    public CrapsGame(){
+//        super();
+//    }
+//
+//    private void getRoundOneWager(){
+//
+//    }
+//
+//    private void getAllWagers(){
+//
+//    }
+//
+//    private void resetWagers(){
+//
+//    }
+//
+//    private void resetRoundNumber(){
+//
+//    }
+//
+//    private void setPoint(Integer point){
+//        this.point = point;
+//    }
+//
+//
+//    @Override
+//    public void play() {
+//
+//    }
+//
+//    @Override
+//    public void nextTurn() {
+//
+//    }
+//
+//    @Override
+//    public Boolean checkGameState() {
+//        return null;
+//    }
+//
+//
+//    @Override
+//    public String printGameRules() {
+//        return null;
+//    }
+//
+//    @Override
+//    public void exit() {
+//
+//    }
+//}

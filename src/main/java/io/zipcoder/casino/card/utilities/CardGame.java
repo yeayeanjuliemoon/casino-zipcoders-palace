@@ -4,6 +4,7 @@ import io.zipcoder.casino.Game;
 import io.zipcoder.casino.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,13 +22,10 @@ public abstract class CardGame implements Game {
         this.deck = new Deck();
         this.deck.shuffle();
         this.dealer = new Player("Dealer");
-        this.playerHands.put(player, new ArrayList<Card>());
+        this.playerHands = new HashMap<>();
+        this.playerHands.put(this.activePlayer, new ArrayList<Card>());
         this.playerHands.put(this.dealer, new ArrayList<Card>());
         dealHands(handSize);
-    }
-
-    public CardGame() {
-
     }
 
     public String showHand(Player player) {
@@ -44,5 +42,17 @@ public abstract class CardGame implements Game {
                 playerHands.get(p).add(this.deck.draw());
             }
         }
+    }
+
+    public Map<Player, List<Card>> getPlayerHands() {
+        return playerHands;
+    }
+
+    public void setPlayerHands(Map<Player, List<Card>> playerHands) {
+        this.playerHands = playerHands;
+    }
+
+    public Player getDealer(){
+        return this.dealer;
     }
 }

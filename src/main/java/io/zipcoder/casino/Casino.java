@@ -123,7 +123,7 @@ public class Casino {
                 break;
             case 2: //GoFish
                 if(checkIfActivePlayer()){
-//                    selectGame(new GoFish());
+                    selectGame(new GoFish(5,this.activePlayer));
                 } else {
                     console.println("No player currently logged in");
                     pauseForReadability();
@@ -133,7 +133,7 @@ public class Casino {
                 if(checkIfActivePlayer()){
                     if(checkIfGamblingPlayer()){
                         addToPlayerBalance();
-                        selectGame(new Blackjack());
+                        selectGame(new Blackjack(this.activePlayer));
                     }
                 } else {
                     console.println("No player currently logged in");
@@ -144,7 +144,7 @@ public class Casino {
                 if(checkIfActivePlayer()){
                     if(checkIfGamblingPlayer()){
                         addToPlayerBalance();
-                        selectGame(new CrapsGame());
+//                        selectGame(new CrapsGame());
                     }
                 } else {
                     console.println("No player currently logged in");
@@ -221,7 +221,7 @@ public class Casino {
         if(activePlayer instanceof GamblingPlayer){
             return true;
         } else {
-            console.print("Come back when you're older!");
+            console.print("Come back when you're older!\n");
             pauseForReadability();
             return false;
         }
