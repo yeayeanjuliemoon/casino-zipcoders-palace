@@ -17,6 +17,7 @@ public class Dice {
 
     public void rollDice(){
         Random rand = new Random();
+        this.dieValues.clear();
         for(int i = 0; i < this.numDice; i++){
             this.dieValues.add(rand.nextInt(6) + 1);
         }
@@ -31,5 +32,13 @@ public class Dice {
         for(int i = 0; i < this.numDice; i++){
             this.dieValues.add(1);
         }
+    }
+
+    public Integer sumDice(){
+        Integer sum = 0;
+        for(Integer i: dieValues){
+            sum += i;
+        }
+        return sum;
     }
 }

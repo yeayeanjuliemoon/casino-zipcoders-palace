@@ -1,9 +1,14 @@
 package io.zipcoder.casino;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import io.zipcoder.casino.Player;
 import io.zipcoder.casino.CrapsWager;
 import io.zipcoder.casino.DiceGame;
+import io.zipcoder.casino.card.utilities.CrapsWagerType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,20 +16,40 @@ import java.util.logging.Logger;
 
 public class CrapsGame extends DiceGame implements GamblingGame {
 
-    private Map<Player, CrapsWager> playerWagerMap;
+    private CrapsWager playerWager = new CrapsWager();
     private Integer roundNum;
     private Integer point;
-    private Console console = new Console(System.in, System.out);
+    private final Console console = new Console(System.in, System.out);
     private Boolean gameState;
+    private GamblingPlayer activePlayer;
 
 
-    public CrapsGame(){
-        super();
-        gameState = true;
+    public CrapsGame(GamblingPlayer player){
+        super(2);
+        this.gameState = true;
+        this.activePlayer = player;
     }
 
     private void getRoundOneWager(){
         //TODO
+        boolean readyToRoll = false;
+        while(!readyToRoll){
+            CrapsWagerType wagerType = getWagerType();
+            if(wagerType != CrapsWagerType.PASS && wagerType != CrapsWagerType.DONTPASS){
+                console.println("You can only bet PASS/DONTPASS on round 1!");
+            }
+            else{
+                Integer amountWagered = console.getIntegerInput("How much would you like to bet? ");
+                switch(wagerType){
+                    case PASS:
+                        this.playerWager.setPass(amountWagered);
+                        break;
+                    case DONTPASS:
+                        this.playerWager.setDontPass(amountWagered);
+                }
+                readyToRoll = true;
+            }
+        }
     }
 
     private void getAllWagers(){
@@ -33,10 +58,12 @@ public class CrapsGame extends DiceGame implements GamblingGame {
 
     private void resetWagers(){
         //TODO
+        this.playerWager = new CrapsWager();
     }
 
     private void resetRoundNumber(){
         //TODO
+        this.roundNum = 0;
     }
 
     @Override
@@ -48,6 +75,23 @@ public class CrapsGame extends DiceGame implements GamblingGame {
     @Override
     public void payout() {
         // TODO
+        try{
+            if(winWager(CrapsWagerType.PASS)){
+                this.activePlayer.deposit(2 * this.playerWager.getPass());
+            }
+            else{
+                this.activePlayer.withdraw(this.playerWager.getPass());
+            }
+        } catch (NullPointerException e){};
+        try{
+            if(winWager(CrapsWagerType.DONTPASS)){
+                this.activePlayer.deposit(2 * this.playerWager.getDontPass());
+            }
+            else{
+                this.activePlayer.withdraw(this.playerWager.getDontPass());
+            }
+        } catch (NullPointerException e){};
+
     }
 
     private void setPoint(Integer point){
@@ -56,11 +100,11 @@ public class CrapsGame extends DiceGame implements GamblingGame {
 
     public void play(){
         console.println(printGameRules());
-        takeBet();
-        console.println("You have wagered "); //TODO GET WAGER VALUE
+
         pauseForReadability();
         while(gameState){
             nextTurn();
+            this.roundNum++;
         }
 
         exit();
@@ -74,6 +118,10 @@ public class CrapsGame extends DiceGame implements GamblingGame {
         // check bets
         // Payout where applicable
         // if game > 1 and returned 7, change gameState
+        getRoundOneWager();
+        this.dice.rollDice();
+        printDiceValues();
+        payout();
     }
 
     @Override
@@ -104,6 +152,79 @@ public class CrapsGame extends DiceGame implements GamblingGame {
     public void exit() {
         console.println("Thank you for playing craps");
         pauseForReadability();
+    }
+
+    public CrapsWagerType getWagerType(){
+        String playerInput = console.getStringInput("Enter the type of wager you would like to make: ");
+        try{
+            return CrapsWagerType.valueOf(playerInput.toUpperCase());
+        }catch (IllegalArgumentException e){
+            console.println("Not a valid wager type");
+            return getWagerType();
+        }
+    }
+
+    public Boolean winWager(CrapsWagerType wagerType){
+        this.diceSum = this.dice.sumDice();
+        switch (wagerType){
+            case PASS:
+                return passWager();
+            case DONTPASS:
+                Boolean pass = passWager();
+                if(pass != null){
+                    pass = !pass;
+                }
+                return pass;
+            case FIELD:
+                List<Integer> winningValues = new ArrayList<>(Arrays.asList(2, 3, 4, 9, 10, 11, 12));
+                if(winningValues.contains(this.diceSum)){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            case SEVENS:
+                if(this.diceSum == 7){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            case ANYCRAPS:
+                if(this.diceSum == 2 || this.diceSum == 3 || this.diceSum == 12){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+        }
+        return null;
+    }
+
+    private Boolean passWager(){
+        if (roundNum == 1){
+            if(this.diceSum == 7 || this.diceSum == 11){
+                return true;
+            }
+            else if(this.diceSum == 2 || this.diceSum == 3 || this.diceSum == 12){
+                return false;
+            }
+            else{
+                this.point = this.diceSum;
+                return null;
+            }
+        }
+        else{
+            if(this.diceSum == this.point){
+                return true;
+            }
+            else if(this.diceSum == 7){
+                return false;
+            }
+            else{
+                return null;
+            }
+        }
     }
 
 }

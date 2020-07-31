@@ -1,15 +1,24 @@
 package io.zipcoder.casino;
 
+import java.util.List;
+
 public abstract class DiceGame implements Game {
-    Dice dice;
-    Integer numberRoll;
-    Integer diceSum;
+    protected Dice dice;
+    protected Integer numberRoll;
+    protected Integer diceSum;
 
-    public DiceGame(){
-
+    public DiceGame(Integer numDice){
+        this.dice = new Dice(numDice);
     }
 
     public String printDiceValues(){
-        return "";
+        List<Integer> diceList = dice.getDieValues();
+        StringBuilder sb = new StringBuilder();
+        sb.append("[ ");
+        for(Integer i : diceList){
+            sb.append(i.toString() + " ");
+        }
+        sb.append("]");
+        return sb.toString();
     }
 }
