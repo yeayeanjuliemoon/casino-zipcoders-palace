@@ -50,4 +50,9 @@ public class CrapsWager {
     public void setAnyCraps(Integer anyCraps) {
         this.anyCraps = anyCraps;
     }
+
+    public String toString(){
+        return "$" + this.pass + " on pass\n" + "$" + this.dontPass + " on don't pass\n" + "$" + this.seven + " on sevens\n" +
+                "$" + this.fieldWager + " on the field\n" + "$" + this.anyCraps + " on any craps\n";
+    }
 }

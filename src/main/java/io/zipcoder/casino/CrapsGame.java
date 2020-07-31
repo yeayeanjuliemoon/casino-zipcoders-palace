@@ -5,6 +5,7 @@ import io.zipcoder.casino.card.utilities.CrapsWagerType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +27,6 @@ public class CrapsGame extends DiceGame implements GamblingGame {
     }
 
     private void getRoundOneWager(){
-        //TODO
         boolean readyToRoll = false;
         while(!readyToRoll){
             CrapsWagerType wagerType = getWagerType();
@@ -35,6 +35,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
             }
             else{
                 Integer amountWagered = parseBet();
+                console.println("Betting $" + amountWagered + " on " + wagerType.toString());
                 switch(wagerType){
                     case PASS:
                         this.playerWager.setPass(amountWagered);
@@ -48,7 +49,33 @@ public class CrapsGame extends DiceGame implements GamblingGame {
     }
 
     private void getAllWagers(){
-        //TODO
+        boolean readyToRoll = false;
+        while(!readyToRoll){
+            CrapsWagerType wagerType = getWagerType();
+            Integer amountWagered = parseBet();
+            console.println("Betting $" + amountWagered + " on " + wagerType.toString());
+            switch(wagerType){
+                case PASS:
+                    this.playerWager.setPass(amountWagered);
+                    break;
+                case DONTPASS:
+                    this.playerWager.setDontPass(amountWagered);
+                    break;
+                case ANYCRAPS:
+                    this.playerWager.setAnyCraps(amountWagered);
+                    break;
+                case SEVENS:
+                    this.playerWager.setSeven(amountWagered);
+                    break;
+                case FIELD:
+                    this.playerWager.setFieldWager(amountWagered);
+                    break;
+                case NONE:
+                    readyToRoll = true;
+                    break;
+            }
+        }
+        console.println("You are betting: \n" + this.playerWager.toString());
     }
 
     private void resetWagers(){
@@ -84,7 +111,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
         // I hate this
         try{
             if(winWager(CrapsWagerType.PASS)){
-                this.activePlayer.deposit(2 * this.playerWager.getPass());
+                this.activePlayer.deposit(this.playerWager.getPass());
             }
             else{
                 this.activePlayer.withdraw(this.playerWager.getPass());
@@ -93,7 +120,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
         } catch (NullPointerException e){};
         try{
             if(winWager(CrapsWagerType.DONTPASS)){
-                this.activePlayer.deposit(2 * this.playerWager.getDontPass());
+                this.activePlayer.deposit(this.playerWager.getDontPass());
             }
             else{
                 this.activePlayer.withdraw(this.playerWager.getDontPass());
@@ -101,19 +128,19 @@ public class CrapsGame extends DiceGame implements GamblingGame {
             this.playerWager.setDontPass(0);
         } catch (NullPointerException e){};
         if(winWager(CrapsWagerType.FIELD)){
-            this.activePlayer.deposit(3 * this.playerWager.getFieldWager());
+            this.activePlayer.deposit(2 * this.playerWager.getFieldWager());
         }
         else{
             this.activePlayer.withdraw(this.playerWager.getFieldWager());
         }
         if(winWager(CrapsWagerType.SEVENS)){
-            this.activePlayer.deposit(5 * this.playerWager.getSeven());
+            this.activePlayer.deposit(4 * this.playerWager.getSeven());
         }
         else{
             this.activePlayer.withdraw(this.playerWager.getSeven());
         }
         if(winWager(CrapsWagerType.ANYCRAPS)){
-            this.activePlayer.deposit(7 * this.playerWager.getAnyCraps());
+            this.activePlayer.deposit(6 * this.playerWager.getAnyCraps());
         }
         else{
             this.activePlayer.withdraw((this.playerWager.getAnyCraps()));
@@ -144,15 +171,38 @@ public class CrapsGame extends DiceGame implements GamblingGame {
         // check bets
         // Payout where applicable
         // if game > 1 and returned 7, change gameState
-        getRoundOneWager();
+        if(roundNum == 1) {
+            getRoundOneWager();
+        } else{
+            getAllWagers();
+        }
+        console.println("Rolling the dice....");
+        pauseForReadability();
         this.dice.rollDice();
         console.println(printDiceValues());
         payout();
+        this.gameState = checkGameState();
     }
 
     @Override
     public Boolean checkGameState() {
-        return null;
+        if(roundNum == 1) {
+            if (this.diceSum == 7 || this.diceSum == 11 || this.diceSum == 2 || this.diceSum == 3 || this.diceSum == 12) {
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+        else{
+            if(this.diceSum == this.point || this.diceSum == 7){
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+
     }
 
     //    @Override
