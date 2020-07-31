@@ -7,6 +7,9 @@ import io.zipcoder.casino.card.utilities.CardSuit;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +27,19 @@ public class GoFishTest {
         this.game = new GoFish(5, mainPlayer);
         this.playerHands = game.getPlayerHands();
         this.dealer = game.getDealer();
+
+        // Making the player hand [Jack Spade] [Jack Diamond] [Two Spade] [Two Diamond] [Eight Diamond]
+        List<Card> playerTestHand = new ArrayList<>(Arrays.asList
+                (new Card(CardSuit.SPADE, CardRank.JACK), new Card(CardSuit.SPADE, CardRank.TWO),
+                        new Card(CardSuit.DIAMOND, CardRank.TWO), new Card(CardSuit.DIAMOND, CardRank.JACK),
+                        new Card(CardSuit.DIAMOND, CardRank.EIGHT)));
+        List<Card> dealerTestHand = new ArrayList<>(Arrays.asList
+                (new Card(CardSuit.CLUB, CardRank.JACK), new Card(CardSuit.CLUB, CardRank.TWO),
+                        new Card(CardSuit.HEART, CardRank.TWO), new Card(CardSuit.HEART, CardRank.JACK),
+                        new Card(CardSuit.HEART, CardRank.SEVEN)));
+
+        this.game.setPlayerHand(playerTestHand);
+        this.game.setDealerHand(dealerTestHand);
     }
 
     @Test
@@ -120,8 +136,12 @@ public class GoFishTest {
 
     @Test
     public void testRankMapCreation(){
+        List<Card> playerHand = this.playerHands.get(this.mainPlayer);
         Map<CardRank, Integer> rankMap = this.game.createRankMap(this.mainPlayer);
         List<Card> mainPlayerHand = this.playerHands.get(this.mainPlayer);
+        CardRank firstRank = playerHand.get(0).getRank();
+        playerHand.add(new Card(CardSuit.SPADE, firstRank));
+        playerHand.add(new Card(CardSuit.SPADE, firstRank));
 
         for(Card c : mainPlayerHand){
             assertTrue(rankMap.get(c.getRank()) > 0);
@@ -163,6 +183,16 @@ public class GoFishTest {
                 "- First player to 5 points wins! \n\n" + "Enter 'exit' at any time to end the game. Have Fun!";
 
         assertEquals(expectedRules, this.game.printGameRules());
+    }
+
+    @Test
+    public void testGetPlayerInput(){
+        CardRank expected = CardRank.JACK;
+        ByteArrayInputStream in = new ByteArrayInputStream("JACK".getBytes());
+        System.setIn(in);
+        CardRank actual = this.game.getPlayerInput();
+
+        assertEquals(expected, actual);
     }
 
 
