@@ -58,7 +58,9 @@ public class CrapsGame extends DiceGame implements GamblingGame {
 
     private void resetWagers(){
         //TODO
-        this.playerWager = new CrapsWager();
+        this.playerWager.setAnyCraps(0);
+        this.playerWager.setFieldWager(0);
+        this.playerWager.setSeven(0);
     }
 
     private void resetRoundNumber(){
@@ -74,7 +76,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
 
     @Override
     public void payout() {
-        // TODO
+        // I hate this
         try{
             if(winWager(CrapsWagerType.PASS)){
                 this.activePlayer.deposit(2 * this.playerWager.getPass());
@@ -82,6 +84,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
             else{
                 this.activePlayer.withdraw(this.playerWager.getPass());
             }
+            this.playerWager.setPass(0);
         } catch (NullPointerException e){};
         try{
             if(winWager(CrapsWagerType.DONTPASS)){
@@ -90,8 +93,27 @@ public class CrapsGame extends DiceGame implements GamblingGame {
             else{
                 this.activePlayer.withdraw(this.playerWager.getDontPass());
             }
+            this.playerWager.setDontPass(0);
         } catch (NullPointerException e){};
-
+        if(winWager(CrapsWagerType.FIELD)){
+            this.activePlayer.deposit(3 * this.playerWager.getFieldWager());
+        }
+        else{
+            this.activePlayer.withdraw(this.playerWager.getFieldWager());
+        }
+        if(winWager(CrapsWagerType.SEVENS)){
+            this.activePlayer.deposit(5 * this.playerWager.getSeven());
+        }
+        else{
+            this.activePlayer.withdraw(this.playerWager.getSeven());
+        }
+        if(winWager(CrapsWagerType.ANYCRAPS)){
+            this.activePlayer.deposit(7 * this.playerWager.getAnyCraps());
+        }
+        else{
+            this.activePlayer.withdraw((this.playerWager.getAnyCraps()));
+        }
+        resetWagers();
     }
 
     private void setPoint(Integer point){
