@@ -50,10 +50,16 @@ public class CrapsGame extends DiceGame implements GamblingGame {
 
     private void getAllWagers(){
         boolean readyToRoll = false;
+        Integer amountWagered = 0;
         while(!readyToRoll){
             CrapsWagerType wagerType = getWagerType();
-            Integer amountWagered = parseBet();
-            console.println("Betting $" + amountWagered + " on " + wagerType.toString());
+            if(!(wagerType == CrapsWagerType.NONE)) {
+                amountWagered = parseBet();
+                console.println("Betting $" + amountWagered + " on " + wagerType.toString());
+            }
+            else{
+                console.println("Betting is over, let the dice roll!");
+            }
             switch(wagerType){
                 case PASS:
                     this.playerWager.setPass(amountWagered);
@@ -181,6 +187,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
         this.dice.rollDice();
         console.println(printDiceValues());
         payout();
+        console.println("You now have $" + this.activePlayer.getBalance() + " in your account");
         this.gameState = checkGameState();
     }
 
@@ -208,11 +215,6 @@ public class CrapsGame extends DiceGame implements GamblingGame {
     //    @Override
     public String printGameStatus() {
         return null;
-    }
-
-    @Override
-    public String printGameRules() {
-        return "Rules to be printed here";
     }
 
     private void pauseForReadability(){
@@ -301,6 +303,22 @@ public class CrapsGame extends DiceGame implements GamblingGame {
                 return null;
             }
         }
+    }
+
+    @Override
+    public String printGameRules() {
+        return "==========Craps===========\n" + "Craps is a game where you roll a pair of dice multiple times\n" +
+                "and bet on the outcome. The first round you can only make pass or don't pass\n" +
+                "bets. The outcome of the first round becomes the \"point\" value\n" + "There are 5 possible wagers:\n"
+                + "\tpass - On the first round, you are betting that the dice will equal 7 or 11\n" +
+                "\tpast the first round, you are betting that the dice will hit the point value (2x Odds)\n\n" +
+                "\tdontpass - On the first round, you are  betting that the dice will hit \"craps\"\n" +
+                "\t(2, 3, or 12), past the first round, you are betting that the dice will hit a\n" +
+                "\t7 before the point value (2x Odds)\n\n" + "\tfield - Past the first round, you are betting that the dice will hit a 2, 3, 4\n" +
+                "\t9, 10, 11, 12 (3x Odds)\n\n" + "\tsevens - Past the first round, you are betting that the dice will roll a 7 (5x Odds)\n\n" +
+                "\tanycraps - Past the first round, you are betting that the dice will hit craps (7x Odds)\n\n" +
+                "Each round, enter the type bet you would like to make and the amount you want to bet. Enter\n" +
+                "'none' when you are done betting for each round.\n\n Good Luck!\n";
     }
 
 }
