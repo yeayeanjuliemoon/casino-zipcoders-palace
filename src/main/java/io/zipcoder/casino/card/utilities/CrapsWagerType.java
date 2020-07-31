@@ -5,5 +5,6 @@ public enum CrapsWagerType {
     DONTPASS,
     FIELD,
     SEVENS,
-    ANYCRAPS;
+    ANYCRAPS,
+    NONE;
 }

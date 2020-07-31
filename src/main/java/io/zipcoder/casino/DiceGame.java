@@ -14,11 +14,9 @@ public abstract class DiceGame implements Game {
     public String printDiceValues(){
         List<Integer> diceList = dice.getDieValues();
         StringBuilder sb = new StringBuilder();
-        sb.append("[ ");
         for(Integer i : diceList){
-            sb.append(i.toString() + " ");
+            sb.append("[ " + i.toString() + " ]");
         }
-        sb.append("]");
         return sb.toString();
     }
 }
