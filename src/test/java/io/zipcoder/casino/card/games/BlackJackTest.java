@@ -65,54 +65,80 @@ public class BlackJackTest {
         assertEquals(expectedResult, actualResult);
     }
 
-/*//TODO - REFACTOR TESTS AS CODE NOTED FOR REFACTOR
+
     @Test
-    public void getPlayerChoiceTest() {
-        ByteArrayInputStream in = new ByteArrayInputStream(("no").getBytes());
-        System.setIn(in);
+    public void determinePlayerMoveTest() {
+        Boolean givenPlayerChoice = true;
+        String originalHand = blackjack.showHand(player);
+        blackjack.determinePlayerMove(givenPlayerChoice);
 
-        Boolean actualResult = blackjack.getPlayerChoice();
-
-        assertFalse(actualResult);
+        String newHand = blackjack.showHand(player);
+        String newCard = newHand.substring(originalHand.length());
+        logger.log(Level.INFO, newCard);
+        assertTrue(newCard.length() > 1);
     }
 
     @Test
-    public void playerBustTest() {
-        ByteArrayInputStream in = new ByteArrayInputStream(("no").getBytes());
-        System.setIn(in);
-
-        while(blackjack.countHand(player) < 22){
-            blackjack.dealCard(player);
-        }
-
-        Boolean actualResult = blackjack.playerBust(player);
-
+    public void translatePlayerChoiceTest(){
+        Boolean actualResult = blackjack.translatePlayerChoice("yes");
         assertTrue(actualResult);
     }
 
     @Test
-    public void takeBetTest() {
-        ByteArrayInputStream in = new ByteArrayInputStream(("20").getBytes());
-        System.setIn(in);
+    public void translatePlayerChoiceNullTest(){
+        Boolean actualResult = blackjack.translatePlayerChoice("notCorrectInput");
+        assertNull(actualResult);
+    }
 
+    @Test
+    public void playerBustTest1() {
+        Boolean actualResult = blackjack.playerBust(22);
+        assertTrue(actualResult);
+    }
+
+    @Test
+    public void playerBustTest2() {
+        Boolean actualResult = blackjack.playerBust(21);
+        assertFalse(actualResult);
+    }
+
+
+    @Test
+    public void takeBetTest() {
         player.deposit(20);
 
-        blackjack.takeBet();
-        blackjack.payout();
+        blackjack.takeBet(player, 20);
+        blackjack.payout(); // Returns 2X bet
         int postPayoutBalance = player.getBalance();
 
         assertEquals(40, postPayoutBalance);
     }
 
     @Test
-    public void payoutTest() {
-        ByteArrayInputStream in = new ByteArrayInputStream(("20").getBytes());
-        System.setIn(in);
+    public void sufficientFundsCheckTest1(){
+        player.deposit(50);
+        int oversizedBet = 500;
+        Boolean actualResult = blackjack.sufficientFundsCheck(player, oversizedBet);
 
+        assertFalse(actualResult);
+    }
+
+    @Test
+    public void sufficientFundsCheckTest2(){
+        player.deposit(50000);
+        int oversizedBet = 500;
+        Boolean actualResult = blackjack.sufficientFundsCheck(player, oversizedBet);
+
+        assertTrue(actualResult);
+    }
+
+
+    @Test
+    public void payoutTest() {
         player.deposit(20);
 
-        blackjack.takeBet();
-        blackjack.payout();
+        blackjack.takeBet(player, 20);
+        blackjack.payout(); //Returns 2X bet
         int postPayoutBalance = player.getBalance();
 
         assertEquals(40, postPayoutBalance);
@@ -120,18 +146,16 @@ public class BlackJackTest {
 
     @Test
     public void payBackTest() {
-        ByteArrayInputStream in = new ByteArrayInputStream(("20").getBytes());
-        System.setIn(in);
-
         player.deposit(20);
 
-        blackjack.takeBet();
-        blackjack.payBack();
+        blackjack.takeBet(player, 20);
+        blackjack.payBack(); // Returns bet
         int postPayoutBalance = player.getBalance();
 
         assertEquals(20, postPayoutBalance);
     }
 
+        /*//TODO - REFACTOR TESTS AS CODE NOTED FOR REFACTOR
     @Test
     public void playTest() {
         ByteArrayInputStream in = new ByteArrayInputStream(("20"+ System.lineSeparator() + "no").getBytes());

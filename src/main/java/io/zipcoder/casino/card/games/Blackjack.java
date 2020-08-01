@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Blackjack extends CardGame implements GamblingGame {
+public class Blackjack extends CardGame /*implements GamblingGame*/ {
 
     private Map<Player, Integer> playerBets;
     private Console console = new Console(System.in, System.out);
@@ -48,7 +48,6 @@ public class Blackjack extends CardGame implements GamblingGame {
         return value;
     }
 
-
     public void determinePlayerMove(Boolean choice){
         try{
             if(choice){ // Player chose to draw another card
@@ -60,6 +59,7 @@ public class Blackjack extends CardGame implements GamblingGame {
             determinePlayerMove(translatePlayerChoice(parsePlayerChoice()));
         }
     }
+
     public Boolean translatePlayerChoice(String playerInput) {
         if (playerInput.equals("yes")) {
             return true;
@@ -79,9 +79,6 @@ public class Blackjack extends CardGame implements GamblingGame {
 
     public Boolean playerBust(Integer playerHand) {
         if(playerHand > 21){
-
-
-            pauseForReadability();
             return true;
         } else {
             return false;
@@ -94,21 +91,29 @@ public class Blackjack extends CardGame implements GamblingGame {
             dealCard(dealer, deck.draw());
             pauseForReadability();
         }
-        if(playerBust(countHand(playerHands.get(dealer)))){
-            console.println("Oh no! "+dealer.toString()+" went bust!");
-        }
     }
 
-    public void takeBet() {
-        Integer wager = console.getIntegerInput("Please place your wager:");
-        if(wager <= ((GamblingPlayer) this.activePlayer).getBalance()) {
-            ((GamblingPlayer) this.activePlayer).withdraw(wager);
-            playerBets.put(activePlayer, wager);
+    public void takeBet(Player player, Integer wager) {
+        if(sufficientFundsCheck((GamblingPlayer)player, wager)) {
+            ((GamblingPlayer)player).withdraw(wager); // Take money
+            playerBets.put(activePlayer, wager);      // Deposit said money in bank
             playerBets.put(dealer, wager);
         } else {
             console.println("Insufficient funds!");
-            takeBet();
+            takeBet(player, parseBet());
         }
+    }
+
+    public Boolean sufficientFundsCheck(GamblingPlayer player, int wager){
+        if(wager <= player.getBalance()){
+            return true;
+        }
+        return false;
+    }
+
+    private Integer parseBet(){
+        Integer wager = console.getIntegerInput("Please place your wager:");
+        return wager;
     }
 
     public void payout() {
@@ -123,12 +128,13 @@ public class Blackjack extends CardGame implements GamblingGame {
 
     public void play() {
         console.println(printGameRules());
-        takeBet();
+        takeBet((GamblingPlayer) this.activePlayer, parseBet());
         console.println("Dealer has a "+ playerHands.get(dealer).get(0));
         pauseForReadability();
         while(gameState){
             nextTurn();
             if(playerTwentyOne(countHand(playerHands.get(activePlayer)))) {
+                console.println(activePlayer.toString() + " wins! You won $" + playerBets.get(activePlayer) + "\n");
                 gameState = false;
                 payout();
             }
@@ -136,6 +142,9 @@ public class Blackjack extends CardGame implements GamblingGame {
         if(!playerTwentyOne(countHand(playerHands.get(activePlayer)))) {
             if (!playerBust(countHand(playerHands.get(activePlayer)))) {
                 dealerTurn();
+                if(playerBust(countHand(playerHands.get(dealer)))){
+                    console.println("Oh no! "+dealer.toString()+" went bust!");
+                }
                 if (determineWinner(countHand(playerHands.get(activePlayer)), countHand(playerHands.get(dealer)))) {
                     console.println(activePlayer.toString() + " wins! You won $" + playerBets.get(activePlayer) + "\n");
                     pauseForReadability();
@@ -146,6 +155,7 @@ public class Blackjack extends CardGame implements GamblingGame {
                 }
             } else {
                 console.println("Oh no! " + activePlayer.toString() + " went bust!");
+                pauseForReadability();
             }
         }
         exit();
@@ -163,7 +173,6 @@ public class Blackjack extends CardGame implements GamblingGame {
 
     public Boolean playerTwentyOne(Integer handValue){
         if(handValue.equals(21)){
-            console.println(activePlayer.toString() + " wins! You won $" + playerBets.get(activePlayer));
             return true;
         }
         return false;
@@ -269,7 +278,7 @@ public class Blackjack extends CardGame implements GamblingGame {
         }
     }
     public void exit() {
-        console.println("Thank you for playing blackjack!");
+        console.println("Thank you for playing blackjack!\n\n\n\n");
         pauseForReadability();
     }
 }
