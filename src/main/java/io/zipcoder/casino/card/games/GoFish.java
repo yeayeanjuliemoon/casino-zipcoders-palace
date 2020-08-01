@@ -41,9 +41,7 @@ public class GoFish extends CardGame {
             return false;
         }
         else{
-            this.console.println("Dealer goes fish!");
-            goFish(this.dealer);
-            return true;
+            return playerGoesFish(this.dealer)
         }
     }
 
@@ -176,8 +174,7 @@ public class GoFish extends CardGame {
         boolean hasGoneFish = false;
         while(!hasGoneFish){
             // Get the rank from the player -> check if possible -> transfer cards or go fish
-            this.console.println("YOUR HAND : ");
-            this.console.println(showHand(this.activePlayer));
+            printPlayerHand();
             CardRank chosenRank = getPlayerInput();
             hasGoneFish = handleUserInput(chosenRank);
             checkForCardSets(this.activePlayer);
@@ -194,13 +191,23 @@ public class GoFish extends CardGame {
             return false;
         }
         else {
-            this.console.println("GO FISH!");
-            goFish(this.activePlayer);
-            this.console.println("YOUR HAND :");
-            this.console.println(showHand(this.activePlayer));
-            return true;
+            return playerGoesFish(this.activePlayer);
         }
 
+    }
+
+    public boolean playerGoesFish(Player player) {
+        this.console.println(player.toString()+ "GOES FISH!");
+        goFish(player);
+        if(player.equals(this.activePlayer)){
+            printPlayerHand();
+        }
+        return true;
+    }
+
+    public void printPlayerHand() {
+        this.console.println("YOUR HAND :");
+        this.console.println(showHand(this.activePlayer));
     }
 
     public Boolean checkGameState() {
