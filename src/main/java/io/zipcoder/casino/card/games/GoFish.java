@@ -158,6 +158,10 @@ public class GoFish extends CardGame {
                 this.gameState = checkGameState();
             }
         }
+        printEndGame();
+    }
+
+    public void printEndGame() {
         console.println("The Game is Over!");
         try {
             console.println("And the winner is..." + determineWinner().toString());

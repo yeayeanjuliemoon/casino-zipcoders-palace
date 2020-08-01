@@ -20,9 +20,12 @@ public class GoFishTest {
     private Player dealer;
     private GoFish game;
     private Map<Player, List<Card>> playerHands;
+    ByteArrayInputStream playerInput;
 
     @Before
     public void setUp(){
+        this.playerInput = new ByteArrayInputStream(("JACK").getBytes());
+        System.setIn(this.playerInput);
         this.mainPlayer = new Player("Bob");
         this.game = new GoFish(5, mainPlayer);
         this.playerHands = game.getPlayerHands();
@@ -40,6 +43,7 @@ public class GoFishTest {
 
         this.game.setPlayerHand(playerTestHand);
         this.game.setDealerHand(dealerTestHand);
+
     }
 
     @Test
@@ -188,8 +192,6 @@ public class GoFishTest {
     @Test
     public void testGetPlayerInput(){
         CardRank expected = CardRank.JACK;
-        ByteArrayInputStream in = new ByteArrayInputStream("JACK".getBytes());
-        System.setIn(in);
         CardRank actual = this.game.getPlayerInput();
 
         assertEquals(expected, actual);
