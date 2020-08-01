@@ -41,7 +41,7 @@ public class GoFish extends CardGame {
             return false;
         }
         else{
-            return playerGoesFish(this.dealer)
+            return playerGoesFish(this.dealer);
         }
     }
 
