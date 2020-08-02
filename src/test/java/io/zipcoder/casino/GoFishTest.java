@@ -97,6 +97,27 @@ public class GoFishTest {
     }
 
     @Test
+    public void testCheckGameStateMaxScore(){
+        for(int i = 0; i < 5; i++) {
+            this.game.incrementScore(this.mainPlayer);
+        }
+
+        boolean gameState = this.game.checkGameState();
+
+        assertFalse(gameState);
+    }
+
+    @Test
+    public void testCheckGameStateEmptyDeckAndHand(){
+        this.game.getDeck().clear();
+        this.game.getPlayerHands().get(this.mainPlayer).clear();
+
+        boolean gameState = this.game.checkGameState();
+
+        assertFalse(gameState);
+    }
+
+    @Test
     public void testHandleUserInput(){
         boolean successStatus = this.game.handleUserInput(CardRank.JACK);
         if(this.game.checkPlayerHand(CardRank.JACK, this.mainPlayer)){
@@ -304,6 +325,85 @@ public class GoFishTest {
 
         assertEquals(expectedHandSize, actualHandSize);
     }
+
+    @Test
+    public void testDealerTurn(){
+        //
+        List<Card> dealerTestHand = new ArrayList<>(Arrays.asList
+                (new Card(CardSuit.CLUB, CardRank.JACK)));
+        this.game.setDealerHand(dealerTestHand);
+        // Should take all of the player's jacks, then go fish
+
+        Integer expected = 4;
+
+        this.game.dealerTurn();
+
+        Integer actual = this.game.getPlayerHands().get(this.dealer).size();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testDealerEmptyHand(){
+        this.game.getPlayerHands().get(this.dealer).clear();
+
+        assertNull(this.game.getDealerCardRank());
+    }
+
+    @Test
+    public void testPlay(){
+        this.playerInput = new ByteArrayInputStream(("jack\neight\nexit\n").getBytes());
+        System.setIn(this.playerInput);
+        this.mainPlayer = new Player("Bob");
+        this.game = new GoFish(5, mainPlayer);
+        // Making the player hand [Jack Spade] [Jack Diamond] [Two Spade] [Two Diamond] [Eight Diamond]
+        List<Card> playerTestHand = new ArrayList<>(Arrays.asList
+                (new Card(CardSuit.SPADE, CardRank.JACK), new Card(CardSuit.SPADE, CardRank.TWO),
+                        new Card(CardSuit.DIAMOND, CardRank.TWO), new Card(CardSuit.DIAMOND, CardRank.JACK),
+                        new Card(CardSuit.DIAMOND, CardRank.EIGHT)));
+        List<Card> dealerTestHand = new ArrayList<>(Arrays.asList
+                (new Card(CardSuit.CLUB, CardRank.JACK), new Card(CardSuit.CLUB, CardRank.QUEEN),
+                        new Card(CardSuit.HEART, CardRank.QUEEN), new Card(CardSuit.HEART, CardRank.JACK),
+                        new Card(CardSuit.HEART, CardRank.SEVEN)));
+
+        this.game.setPlayerHand(playerTestHand);
+        this.game.setDealerHand(dealerTestHand);
+        this.game.play();
+
+        Player expectedWinner = this.mainPlayer;
+
+        Player actualWinner = this.game.determineWinner();
+
+        assertEquals(expectedWinner, actualWinner);
+    }
+
+    @Test
+    public void testPlayTie(){
+        this.playerInput = new ByteArrayInputStream(("exit").getBytes());
+        System.setIn(this.playerInput);
+        this.mainPlayer = new Player("Bob");
+        this.game = new GoFish(5, mainPlayer);
+        // Making the player hand [Jack Spade] [Jack Diamond] [Two Spade] [Two Diamond] [Eight Diamond]
+        List<Card> playerTestHand = new ArrayList<>(Arrays.asList
+                (new Card(CardSuit.SPADE, CardRank.JACK), new Card(CardSuit.SPADE, CardRank.TWO),
+                        new Card(CardSuit.DIAMOND, CardRank.TWO), new Card(CardSuit.DIAMOND, CardRank.JACK),
+                        new Card(CardSuit.DIAMOND, CardRank.EIGHT)));
+        List<Card> dealerTestHand = new ArrayList<>(Arrays.asList
+                (new Card(CardSuit.CLUB, CardRank.JACK), new Card(CardSuit.CLUB, CardRank.QUEEN),
+                        new Card(CardSuit.HEART, CardRank.QUEEN), new Card(CardSuit.HEART, CardRank.JACK),
+                        new Card(CardSuit.HEART, CardRank.SEVEN)));
+
+        this.game.setPlayerHand(playerTestHand);
+        this.game.setDealerHand(dealerTestHand);
+        this.game.play();
+
+
+        Player actualWinner = this.game.determineWinner();
+
+        assertNull(actualWinner);
+    }
+
+
 
 
 

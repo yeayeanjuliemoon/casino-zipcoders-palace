@@ -22,7 +22,7 @@ public class GoFish extends CardGame {
         playerScores.put(this.dealer, 0);
     }
 
-    private void dealerTurn(){
+    public void dealerTurn(){
         boolean hasGoneFish = false;
 
         List<Card> dealerHand;
@@ -36,8 +36,12 @@ public class GoFish extends CardGame {
     public CardRank getDealerCardRank() {
         Random rand = new Random();
         List<Card> dealerHand = this.playerHands.get(this.dealer);
-        Integer cardIndex = rand.nextInt(dealerHand.size() - 1);
-        return dealerHand.get(cardIndex).getRank();
+        if(dealerHand.size() > 0) {
+            Integer cardIndex = rand.nextInt(dealerHand.size());
+            return dealerHand.get(cardIndex).getRank();
+        } else{
+            return null;
+        }
     }
 
     public boolean handleDealerInput(CardRank chosenRank){
