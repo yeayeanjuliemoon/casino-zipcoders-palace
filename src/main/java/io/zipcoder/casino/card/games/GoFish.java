@@ -5,6 +5,7 @@ import io.zipcoder.casino.Player;
 import io.zipcoder.casino.card.utilities.Card;
 import io.zipcoder.casino.card.utilities.CardGame;
 import io.zipcoder.casino.card.utilities.CardRank;
+import io.zipcoder.casino.card.utilities.Deck;
 
 import java.util.*;
 
@@ -23,18 +24,23 @@ public class GoFish extends CardGame {
 
     private void dealerTurn(){
         boolean hasGoneFish = false;
-        Random rand = new Random();
+
         List<Card> dealerHand;
         while(!hasGoneFish){
-            dealerHand = this.playerHands.get(this.dealer);
-            Integer cardIndex = rand.nextInt(dealerHand.size() - 1);
-            CardRank chosenRank = dealerHand.get(cardIndex).getRank();
+            CardRank chosenRank = getDealerCardRank();
             this.console.println("Dealer fishes for : " + chosenRank.toString());
             hasGoneFish = handleDealerInput(chosenRank);
         }
     }
 
-    private boolean handleDealerInput(CardRank chosenRank){
+    public CardRank getDealerCardRank() {
+        Random rand = new Random();
+        List<Card> dealerHand = this.playerHands.get(this.dealer);
+        Integer cardIndex = rand.nextInt(dealerHand.size() - 1);
+        return dealerHand.get(cardIndex).getRank();
+    }
+
+    public boolean handleDealerInput(CardRank chosenRank){
         if(checkPlayerHand(chosenRank, this.activePlayer)){
             transferCards(this.activePlayer, this.dealer, chosenRank);
             checkForCardSets(this.dealer);
@@ -68,11 +74,15 @@ public class GoFish extends CardGame {
         Map<CardRank, Integer> rankMap = createRankMap(player);
         for(CardRank c : rankMap.keySet()){
             if(rankMap.get(c) >= 4){
-                System.out.println("Set of 4: " + c.toString() + " for player: " + player.toString());
-                removeSet(c, player);
-                incrementScore(player);
+                removeCompleteSetAndIncrementScore(player, c);
             }
         }
+    }
+
+    public void removeCompleteSetAndIncrementScore(Player player, CardRank c) {
+        System.out.println("Set of 4: " + c.toString() + " for player: " + player.toString());
+        removeSet(c, player);
+        incrementScore(player);
     }
 
 
@@ -260,7 +270,7 @@ public class GoFish extends CardGame {
         return chosenRank;
     }
 
-    private String printScores(){
+    public String printScores(){
         StringBuilder sb = new StringBuilder();
         sb.append("Scores :  ");
         sb.append(this.activePlayer.toString() + " : " + this.playerScores.get(this.activePlayer) + "    ");
@@ -274,6 +284,10 @@ public class GoFish extends CardGame {
 
     public void setDealerHand(List<Card> hand){
         this.playerHands.replace(this.dealer, hand);
+    }
+
+    public List<Card> getDeck(){
+        return this.deck.getDeck();
     }
 
 }

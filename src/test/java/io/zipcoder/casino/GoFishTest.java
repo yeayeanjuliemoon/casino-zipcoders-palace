@@ -112,6 +112,13 @@ public class GoFishTest {
     }
 
     @Test
+    public void testHandleUserInputWhenGoFish(){
+        boolean successStatus = this.game.handleUserInput(CardRank.SIX);
+
+        assertTrue(successStatus);
+    }
+
+    @Test
     public void testIncrementPlayerScore(){
         this.game.incrementScore(this.mainPlayer);
         Player winner = this.game.determineWinner();
@@ -164,6 +171,17 @@ public class GoFishTest {
     }
 
     @Test
+    public void testGoFishEmptyDeck(){
+        Integer initialHandSize = this.playerHands.get(this.mainPlayer).size();
+        this.game.getDeck().clear();
+        this.game.goFish(this.mainPlayer);
+
+        Integer finalHandSize = this.playerHands.get(this.mainPlayer).size();
+
+        assertEquals(initialHandSize, finalHandSize);
+    }
+
+    @Test
     public void testCheckForCardSets(){
         List<Card> playerHand = this.playerHands.get(this.mainPlayer);
         CardRank firstRank = playerHand.get(0).getRank();
@@ -195,6 +213,96 @@ public class GoFishTest {
         CardRank actual = this.game.getPlayerInput();
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testGetDealerCardRank(){
+        CardRank obtainedRank = this.game.getDealerCardRank();
+
+        assertTrue(this.game.checkPlayerHand(obtainedRank, this.dealer));
+    }
+
+    @Test
+    public void testHandleDealerInputSuccess(){
+        CardRank successfulRank = CardRank.JACK;
+
+        assertFalse(this.game.handleDealerInput(successfulRank));
+    }
+
+    @Test
+    public void testHandleDealerInputFailure(){
+        CardRank failureRank = CardRank.SEVEN;
+
+        assertTrue(this.game.handleDealerInput(failureRank));
+    }
+
+    @Test
+    public void testGetPlayerInputExit(){
+        this.playerInput = new ByteArrayInputStream(("exIt").getBytes());
+        System.setIn(this.playerInput);
+        this.mainPlayer = new Player("Bob");
+        this.game = new GoFish(5, mainPlayer);
+
+        CardRank nullRank = this.game.getPlayerInput();
+
+        assertNull(nullRank);
+    }
+
+    @Test
+    public void testGetPlayerInputWrongInput(){
+        this.playerInput = new ByteArrayInputStream(("asdfhj\njack\n").getBytes());
+        System.setIn(this.playerInput);
+        this.mainPlayer = new Player("Bob");
+        this.game = new GoFish(5, mainPlayer);
+        List<Card> playerTestHand = new ArrayList<>(Arrays.asList
+                (new Card(CardSuit.SPADE, CardRank.JACK), new Card(CardSuit.SPADE, CardRank.TWO),
+                        new Card(CardSuit.DIAMOND, CardRank.TWO), new Card(CardSuit.DIAMOND, CardRank.JACK),
+                        new Card(CardSuit.DIAMOND, CardRank.EIGHT)));
+        this.game.setPlayerHand(playerTestHand);
+        CardRank expected = CardRank.JACK;
+
+        CardRank actual = this.game.getPlayerInput();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testPrintScores(){
+        String expected = "Scores :  " + this.mainPlayer.toString() + " : " + "0" + "    " +
+                this.dealer.toString() + " : " + "0\n";
+
+        String actual = this.game.printScores();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testNextTurn(){
+        this.playerInput = new ByteArrayInputStream(("jack\neight\nexit\n").getBytes());
+        System.setIn(this.playerInput);
+        this.mainPlayer = new Player("Bob");
+        this.game = new GoFish(5, mainPlayer);
+        // Making the player hand [Jack Spade] [Jack Diamond] [Two Spade] [Two Diamond] [Eight Diamond]
+        List<Card> playerTestHand = new ArrayList<>(Arrays.asList
+                (new Card(CardSuit.SPADE, CardRank.JACK), new Card(CardSuit.SPADE, CardRank.TWO),
+                        new Card(CardSuit.DIAMOND, CardRank.TWO), new Card(CardSuit.DIAMOND, CardRank.JACK),
+                        new Card(CardSuit.DIAMOND, CardRank.EIGHT)));
+        List<Card> dealerTestHand = new ArrayList<>(Arrays.asList
+                (new Card(CardSuit.CLUB, CardRank.JACK), new Card(CardSuit.CLUB, CardRank.TWO),
+                        new Card(CardSuit.HEART, CardRank.TWO), new Card(CardSuit.HEART, CardRank.JACK),
+                        new Card(CardSuit.HEART, CardRank.SEVEN)));
+
+        this.game.setPlayerHand(playerTestHand);
+        this.game.setDealerHand(dealerTestHand);
+        Integer expectedHandSize = 4;
+
+
+        this.game.nextTurn();
+
+
+        Integer actualHandSize = this.game.getPlayerHands().get(this.mainPlayer).size();
+
+        assertEquals(expectedHandSize, actualHandSize);
     }
 
 
