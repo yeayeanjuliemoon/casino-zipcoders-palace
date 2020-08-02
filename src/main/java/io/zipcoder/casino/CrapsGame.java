@@ -21,7 +21,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
 
 
     public CrapsGame(GamblingPlayer player){
-        super(2);
+        super(2, player);
         this.gameState = true;
         this.activePlayer = player;
     }

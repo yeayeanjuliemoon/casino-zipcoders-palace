@@ -9,96 +9,114 @@ import java.util.List;
 public class CeeLoGameTest {
 
     @Test
-    public void testTakeBet() {
-        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
-        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
+    public void testCheckWin() {
+        GamblingPlayer player = new GamblingPlayer("Billy");
+        CeeLoGame ceeLoGame = new CeeLoGame(player);
 
-        gamblingPlayer.deposit(100);
-
-        ceeLoGame.takeBet(100);
-
-        Integer expected = 200;
-        Integer actual = ceeLoGame.getPot();
-
-        Assert.assertEquals(expected, actual);
+        Assert.assertTrue(ceeLoGame.checkForWin("456"));
+        Assert.assertTrue(ceeLoGame.checkForWin("611"));
     }
 
     @Test
-    public void testGetDiceRoll() {
-        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
-        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
+    public void testCheckLoss() {
+        GamblingPlayer player = new GamblingPlayer("Billy");
+        CeeLoGame ceeLoGame = new CeeLoGame(player);
 
-        List<Integer> actual = ceeLoGame.getDiceRoll();
-        Assert.assertEquals(3, actual.size());
-
-        Assert.assertNotNull(actual.get(0));
-        Assert.assertNotNull(actual.get(1));
-        Assert.assertNotNull(actual.get(2));
+        Assert.assertTrue(ceeLoGame.checkForLoss("123"));
+        Assert.assertTrue(ceeLoGame.checkForLoss("144"));
     }
 
-    @Test
-    public void testCheckPlayer() {
-        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
-        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
+//    @Test
+//    public void testTakeBet() {
+//        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
+//        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
+//
+//        gamblingPlayer.deposit(100);
+//
+//        ceeLoGame.takeBet(100);
+//
+//        Integer expected = 200;
+//        Integer actual = ceeLoGame.getPot();
+//
+//        Assert.assertEquals(expected, actual);
+//    }
 
-        List<Integer> testArray1 = new ArrayList<>();
-        testArray1.add(4);
-        testArray1.add(5);
-        testArray1.add(6);
+//    @Test
+//    public void testGetDiceRoll() {
+//        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
+//        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
+//
+//        List<Integer> actual = ceeLoGame.getDiceRoll();
+//        Assert.assertEquals(3, actual.size());
+//
+//        Assert.assertNotNull(actual.get(0));
+//        Assert.assertNotNull(actual.get(1));
+//        Assert.assertNotNull(actual.get(2));
+//    }
 
-        String expected = "Player";
-        String actual = ceeLoGame.checkPlayer(testArray1);
+//    @Test
+//    public void testCheckPlayer() {
+//        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
+//        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
+//
+//        List<Integer> testArray1 = new ArrayList<>();
+//        testArray1.add(4);
+//        testArray1.add(5);
+//        testArray1.add(6);
+//
+//        String expected = "Player";
+//        String actual = ceeLoGame.checkPlayer(testArray1);
+//
+//        Assert.assertEquals(expected, actual);
+//
+//        List<Integer> testArray2 = new ArrayList<>();
+//        testArray2.add(1);
+//        testArray2.add(1);
+//        testArray2.add(6);
+//
+//        String expected1 = "Player";
+//        String actual1 = ceeLoGame.checkPlayer(testArray2);
+//
+//        Assert.assertEquals(expected1, actual1);
+//
+//    }
 
-        Assert.assertEquals(expected, actual);
+//    @Test
+//    public void testCheckHouse() {
+//        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
+//        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
+//
+//        List<Integer> testArray1 = new ArrayList<>();
+//        testArray1.add(4);
+//        testArray1.add(5);
+//        testArray1.add(6);
+//
+//        String expected = "House";
+//        String actual = ceeLoGame.checkHouse(testArray1);
+//
+//        Assert.assertEquals(expected, actual);
+//
+//        List<Integer> testArray2 = new ArrayList<>();
+//        testArray2.add(1);
+//        testArray2.add(1);
+//        testArray2.add(6);
+//
+//        String expected1 = "House";
+//        String actual1 = ceeLoGame.checkHouse(testArray2);
+//
+//        Assert.assertEquals(expected1, actual1);
+//    }
 
-        List<Integer> testArray2 = new ArrayList<>();
-        testArray2.add(1);
-        testArray2.add(1);
-        testArray2.add(6);
-
-        String expected1 = "Player";
-        String actual1 = ceeLoGame.checkPlayer(testArray2);
-
-        Assert.assertEquals(expected1, actual1);
-
-    }
-
-    @Test
-    public void testCheckHouse() {
-        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
-        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
-
-        List<Integer> testArray1 = new ArrayList<>();
-        testArray1.add(4);
-        testArray1.add(5);
-        testArray1.add(6);
-
-        String expected = "House";
-        String actual = ceeLoGame.checkHouse(testArray1);
-
-        Assert.assertEquals(expected, actual);
-
-        List<Integer> testArray2 = new ArrayList<>();
-        testArray2.add(1);
-        testArray2.add(1);
-        testArray2.add(6);
-
-        String expected1 = "House";
-        String actual1 = ceeLoGame.checkHouse(testArray2);
-
-        Assert.assertEquals(expected1, actual1);
-    }
-
-    @Test
-    public void testPrintScore() {
-        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
-        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
-
-        String actual = ceeLoGame.printScore();
-        String expected = "The player's score is " + 0;
-
-        Assert.assertEquals(expected, actual);
-    }
+//    @Test
+//    public void testPrintScore() {
+//        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
+//        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
+//
+//        String actual = ceeLoGame.printScore();
+//        String expected = "The player's score is " + 0;
+//
+//        Assert.assertEquals(expected, actual);
+//    }
 
     @Test
     public void testPrintGameRules() {

@@ -3,11 +3,11 @@ package io.zipcoder.casino;
 
 import java.util.List;
 public abstract class DiceGame implements Game, GamblingGame {
-    Dice dice;
-    Integer numberRoll;
-    Integer diceSum;
+    protected Dice dice;
+    protected Integer numberRoll;
+    protected Integer diceSum;
 
-    public DiceGame(Integer numDice){
+    public DiceGame(Integer numDice, GamblingPlayer player){
         this.dice = new Dice(numDice);
     }
 
