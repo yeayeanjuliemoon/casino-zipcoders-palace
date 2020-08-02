@@ -3,7 +3,7 @@ package io.zipcoder.casino;
 import static org.junit.Assert.*;
 
 import io.zipcoder.casino.card.games.Blackjack;
-import org.junit.Rule;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -12,14 +12,20 @@ import java.io.PrintStream;
 
 public class CasinoTest {
 
+    Casino casino;
+    String givenName = "aName";
+
+    @Before
+    public void init(){
+    casino = new Casino();
+    }
+
 
     @Test
     public void createPlayerTest(){
         ByteArrayInputStream in = new ByteArrayInputStream(("no").getBytes());
         System.setIn(in);
 
-        Casino casino = new Casino();
-        String givenName = "ted";
         Player player = casino.createPlayer(givenName);
 
         String actualName = player.toString();
@@ -36,8 +42,7 @@ public class CasinoTest {
         ByteArrayInputStream in = new ByteArrayInputStream(("0"+ System.lineSeparator() + "no").getBytes());
         System.setIn(in);
 
-        Casino casino = new Casino();
-        Player player = new GamblingPlayer("Ned");
+        Player player = new GamblingPlayer(givenName);
         Blackjack blackjack = new Blackjack(player);
         casino.selectGame(blackjack);
 
@@ -55,10 +60,9 @@ public class CasinoTest {
 
     }
 
+    //Good
     @Test
     public void printCasinoMenuTest() {
-        Casino casino = new Casino();
-
         String actualResult = casino.printCasinoMenu();
         String expectedResult = "******* ♖ ZipCoder's Palace ♖  *******\n" +
                 "******* Please Enter A Number: *******\n"+
@@ -79,9 +83,6 @@ public class CasinoTest {
         ByteArrayInputStream in = new ByteArrayInputStream(("no").getBytes());
         System.setIn(in);
 
-        Casino casino = new Casino();
-        String givenName = "GamblingHomer";
-
         casino.playerLogin(givenName);
         String actualPlayers = casino.printPlayers();
         String expectedPlayers = "Current Players:\n    "+givenName+"\n";
@@ -91,27 +92,21 @@ public class CasinoTest {
 
     @Test
     public void playerLogoutTest(){
-        ByteArrayInputStream in = new ByteArrayInputStream(("no").getBytes());
+        /*ByteArrayInputStream in = new ByteArrayInputStream(("no").getBytes());
         System.setIn(in);
-
-        Casino casino = new Casino();
-        String givenName = "GamblingMoe";
 
         casino.playerLogin(givenName);
 
         casino.playerLogout();
         Boolean actual = casino.checkIfActivePlayer();
 
-        assertFalse(actual);
+        assertFalse(actual);*/
     }
 
     @Test
     public void printPlayersTest(){
         ByteArrayInputStream in = new ByteArrayInputStream(("no").getBytes());
         System.setIn(in);
-
-        Casino casino = new Casino();
-        String givenName = "NonGamblingNed";
 
         casino.playerLogin(givenName);
         String actualPlayers = casino.printPlayers();
@@ -122,19 +117,20 @@ public class CasinoTest {
 
     @Test
     public void parseMenuInputTest(){
-        Casino casino = new Casino();
 
         //casino.parseMenuInput();
 
     }
 
     @Test
+    public void gamblingGameLoginTest(){
+
+    }
+    @Test
     public void checkIfActivePlayersTest(){
         ByteArrayInputStream in = new ByteArrayInputStream(("no").getBytes());
         System.setIn(in);
 
-        Casino casino = new Casino();
-        String givenName = "Bart";
         casino.playerLogin(givenName);
 
         Boolean actual = casino.checkIfActivePlayer();

@@ -66,6 +66,7 @@ public class Casino {
     }
 
     public void playerLogin(String givenName) {
+        console.print(printPlayers());
         if(isAPlayer(givenName) >= 0){
             this.activePlayer = listOfPlayers.get(isAPlayer(givenName));
         } else {
@@ -99,7 +100,12 @@ public class Casino {
     }
 
     public void playerLogout() {
-        this.activePlayer = null;
+        if(checkIfActivePlayer()){
+            this.activePlayer = null;
+        } else {
+            console.println("No player currently logged in");
+            pauseForReadability();
+        }
     }
 
     public String printPlayers() {
@@ -118,57 +124,22 @@ public class Casino {
         Integer input = console.getIntegerInput("Selection >");
         switch (input){
             case 1: //Login
-                console.print(printPlayers());
                 playerLogin(console.getStringInput("What is your name?"));
                 break;
             case 2: //GoFish
-                if(checkIfActivePlayer()){
-                    selectGame(new GoFish(5,this.activePlayer));
-                } else {
-                    console.println("No player currently logged in");
-                    pauseForReadability();
-                }
+                gameLogin(new GoFish(5,this.activePlayer));
                 break;
             case 3: //BlackJack
-                if(checkIfActivePlayer()){
-                    if(checkIfGamblingPlayer()){
-                        addToPlayerBalance();
-                        selectGame(new Blackjack(this.activePlayer));
-                    }
-                } else {
-                    console.println("No player currently logged in");
-                    pauseForReadability();
-                }
+                gameLogin(new Blackjack(this.activePlayer));
                 break;
             case 4: // Craps
-                if(checkIfActivePlayer()){
-                    if(checkIfGamblingPlayer()){
-                        addToPlayerBalance();
-                        selectGame(new CrapsGame((GamblingPlayer) this.activePlayer));
-                    }
-                } else {
-                    console.println("No player currently logged in");
-                    pauseForReadability();
-                }
+                gameLogin(new CrapsGame((GamblingPlayer) this.activePlayer));
                 break;
             case 5: // CeeLo
-                if(checkIfActivePlayer()){
-                    if(checkIfGamblingPlayer()){
-                        addToPlayerBalance();
-                        selectGame(new CeeLoGame((GamblingPlayer) activePlayer));
-                    }
-                } else {
-                    console.println("No player currently logged in");
-                    pauseForReadability();
-                }
+                gameLogin(new CeeLoGame((GamblingPlayer) this.activePlayer));
                 break;
             case 6: // Logout
-                if(checkIfActivePlayer()){
-                    playerLogout();
-                } else {
-                    console.println("No player currently logged in");
-                    pauseForReadability();
-                }
+                playerLogout();
                 break;
             case 7: // Quit
                 quit();
@@ -176,7 +147,23 @@ public class Casino {
             default:
                 console.println("Please enter a valid selection (1 -> 9)");
                 pauseForReadability();
-                break;
+        }
+    }
+
+    public void gameLogin(Game aGame){
+        if(checkIfActivePlayer()){
+            if(aGame instanceof GamblingGame) {
+                if (checkIfGamblingPlayer()) {
+                    addToPlayerBalance();
+                    selectGame(aGame);
+                }
+            }
+            else {
+                selectGame(aGame);
+            }
+        } else {
+            console.println("No player currently logged in");
+            pauseForReadability();
         }
     }
 
