@@ -34,19 +34,19 @@ public class CrapsGame extends DiceGame implements GamblingGame {
                 console.println("You can only bet PASS/DONTPASS on round 1!");
             }
             else{
-                Integer amountWagered = parseBet();
-                console.println("Betting $" + amountWagered + " on " + wagerType.toString());
-                switch(wagerType){
-                    case PASS:
-                        this.playerWager.setPass(amountWagered);
-                        break;
-                    case DONTPASS:
-                        this.playerWager.setDontPass(amountWagered);
-                }
+                takeRoundOneBet(wagerType);
                 readyToRoll = true;
             }
         }
     }
+
+    private void takeRoundOneBet(CrapsWagerType wagerType) {
+        Integer amountWagered = parseBet();
+        console.println("Betting $" + amountWagered + " on " + wagerType.toString());
+        setWager(wagerType, amountWagered);
+    }
+
+
 
     private void getAllWagers(){
         boolean readyToRoll = false;
@@ -60,28 +60,32 @@ public class CrapsGame extends DiceGame implements GamblingGame {
             else{
                 console.println("Betting is over, let the dice roll!");
             }
-            switch(wagerType){
-                case PASS:
-                    this.playerWager.setPass(amountWagered);
-                    break;
-                case DONTPASS:
-                    this.playerWager.setDontPass(amountWagered);
-                    break;
-                case ANYCRAPS:
-                    this.playerWager.setAnyCraps(amountWagered);
-                    break;
-                case SEVENS:
-                    this.playerWager.setSeven(amountWagered);
-                    break;
-                case FIELD:
-                    this.playerWager.setFieldWager(amountWagered);
-                    break;
-                case NONE:
-                    readyToRoll = true;
-                    break;
-            }
+            readyToRoll = setWager( wagerType, amountWagered);
         }
         console.println("You are betting: \n" + this.playerWager.toString());
+    }
+
+    private boolean setWager(CrapsWagerType wagerType, Integer amountWagered) {
+        switch(wagerType){
+            case PASS:
+                this.playerWager.setPass(amountWagered);
+                break;
+            case DONTPASS:
+                this.playerWager.setDontPass(amountWagered);
+                break;
+            case ANYCRAPS:
+                this.playerWager.setAnyCraps(amountWagered);
+                break;
+            case SEVENS:
+                this.playerWager.setSeven(amountWagered);
+                break;
+            case FIELD:
+                this.playerWager.setFieldWager(amountWagered);
+                break;
+            case NONE:
+                return true;
+        }
+        return false;
     }
 
     private void resetWagers(){

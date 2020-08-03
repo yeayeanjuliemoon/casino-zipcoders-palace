@@ -1,5 +1,7 @@
-package io.zipcoder.casino;
+package io.zipcoder.casino.crapsTest;
 
+import io.zipcoder.casino.CrapsGame;
+import io.zipcoder.casino.GamblingPlayer;
 import io.zipcoder.casino.card.utilities.CrapsWagerType;
 import org.junit.Test;
 
