@@ -88,7 +88,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
         return false;
     }
 
-    private void resetWagers(){
+    public void resetWagers(){
         //TODO
         this.playerWager.setAnyCraps(0);
         this.playerWager.setFieldWager(0);

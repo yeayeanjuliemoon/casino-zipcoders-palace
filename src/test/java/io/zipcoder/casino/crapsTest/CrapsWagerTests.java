@@ -81,4 +81,24 @@ public class CrapsWagerTests {
         assertEquals(expectedAny, actualAny);
     }
 
+    @Test
+    public void testResetWagers(){
+        setUpWithInput("");
+        Integer expected = 0;
+        this.game.setWager(CrapsWagerType.SEVENS, 100);
+        this.game.setWager(CrapsWagerType.FIELD, 100);
+        this.game.setWager(CrapsWagerType.ANYCRAPS, 100);
+
+        this.game.resetWagers();
+
+        Integer sevensWager = this.game.getPlayerWager().getSeven();
+        Integer fieldWager = this.game.getPlayerWager().getFieldWager();
+        Integer anyCrapsWager = this.game.getPlayerWager().getAnyCraps();
+
+        assertEquals(sevensWager, expected);
+        assertEquals(fieldWager, expected);
+        assertEquals(anyCrapsWager, expected);
+
+    }
+
 }
