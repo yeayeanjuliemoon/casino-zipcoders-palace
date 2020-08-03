@@ -3,6 +3,7 @@ package io.zipcoder.casino.crapsTest;
 import io.zipcoder.casino.CrapsGame;
 import io.zipcoder.casino.GamblingPlayer;
 import io.zipcoder.casino.Player;
+import io.zipcoder.casino.card.utilities.CrapsWagerType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,6 +46,39 @@ public class CrapsWagerTests {
         Integer actualWager = this.game.getPlayerWager().getDontPass();
 
         assertEquals(expectedWager, actualWager);
+    }
+
+    @Test
+    public void testSetField(){
+        setUpWithInput("");
+        Integer expectedField = 100;
+        this.game.setWager(CrapsWagerType.FIELD, expectedField);
+
+        Integer actualField = this.game.getPlayerWager().getFieldWager();
+
+        assertEquals(actualField, expectedField);
+    }
+
+    @Test
+    public void testSetSevens(){
+        setUpWithInput("");
+        Integer expectedSeven = 100;
+        this.game.setWager(CrapsWagerType.SEVENS, expectedSeven);
+
+        Integer actualSeven = this.game.getPlayerWager().getSeven();
+
+        assertEquals(actualSeven, expectedSeven);
+    }
+
+    @Test
+    public void testSetAnyCraps(){
+        setUpWithInput("");
+        Integer expectedAny = 100;
+        this.game.setWager(CrapsWagerType.ANYCRAPS, expectedAny);
+
+        Integer actualAny = this.game.getPlayerWager().getAnyCraps();
+
+        assertEquals(expectedAny, actualAny);
     }
 
 }

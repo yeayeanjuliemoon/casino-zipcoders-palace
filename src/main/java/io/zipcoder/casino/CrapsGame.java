@@ -118,7 +118,6 @@ public class CrapsGame extends DiceGame implements GamblingGame {
 
     @Override
     public void payout() {
-        // I hate this
         try{
             if(winWager(CrapsWagerType.PASS)){
                 this.activePlayer.deposit(this.playerWager.getPass());
