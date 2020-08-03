@@ -8,6 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -225,6 +228,61 @@ public class CrapsWagerTests {
         assertFalse(this.game.checkGameState());
     }
 
+    @Test
+    public void testGetAllWagers(){
+        setUpWithInput("pass\n100\nfield\n300\nnone");
+        Integer expectedPass = 100;
+        Integer expectedField = 300;
 
+        this.game.getAllWagers();
+
+        Integer actualPass = this.game.getPlayerWager().getPass();
+        Integer actualField = this.game.getPlayerWager().getFieldWager();
+
+        assertEquals(expectedPass, actualPass);
+        assertEquals(expectedField, actualField);
+    }
+
+    @Test
+    public void printGameRulesTest() {
+        GamblingPlayer player = new GamblingPlayer("WhyNotZoidberg");
+        CrapsGame craps = new CrapsGame(player);
+
+        String actualOutput = craps.printGameRules();
+        String expectedOutput = "==========Craps===========\n" + "Craps is a game where you roll a pair of dice multiple times\n" +
+                "and bet on the outcome. The first round you can only make pass or don't pass\n" +
+                "bets. The outcome of the first round becomes the \"point\" value\n" + "There are 5 possible wagers:\n"
+                + "\tpass - On the first round, you are betting that the dice will equal 7 or 11\n" +
+                "\tpast the first round, you are betting that the dice will hit the point value (2x Odds)\n\n" +
+                "\tdontpass - On the first round, you are  betting that the dice will hit \"craps\"\n" +
+                "\t(2, 3, or 12), past the first round, you are betting that the dice will hit a\n" +
+                "\t7 before the point value (2x Odds)\n\n" + "\tfield - Past the first round, you are betting that the dice will hit a 2, 3, 4\n" +
+                "\t9, 10, 11, 12 (3x Odds)\n\n" + "\tsevens - Past the first round, you are betting that the dice will roll a 7 (5x Odds)\n\n" +
+                "\tanycraps - Past the first round, you are betting that the dice will hit craps (7x Odds)\n\n" +
+                "Each round, enter the type bet you would like to make and the amount you want to bet. Enter\n" +
+                "'none' when you are done betting for each round.\n\n Good Luck!\n";
+
+        assertEquals(expectedOutput, actualOutput);
+    }
+
+    @Test
+    public void testNextTurnFirst(){
+        List<Integer> endingValues = new ArrayList<>(Arrays.asList(2, 3, 7, 11, 12));
+        setUpWithInput("pass\n100");
+        Integer expectedPassWin = 100;
+        Integer expectedPassLoss = 0;
+
+        this.game.nextTurn();
+
+        Integer actualPass = this.game.getPlayerWager().getPass();
+        if(endingValues.contains(this.game.getDiceSum())){
+            assertFalse(this.game.checkGameState());
+            assertEquals(expectedPassLoss, actualPass);
+        }
+        else{
+            assertTrue(this.game.checkGameState());
+            assertEquals(expectedPassWin, actualPass);
+        }
+    }
 
 }

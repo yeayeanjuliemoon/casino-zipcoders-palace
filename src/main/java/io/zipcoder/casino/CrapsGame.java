@@ -46,23 +46,25 @@ public class CrapsGame extends DiceGame implements GamblingGame {
         setWager(wagerType, amountWagered);
     }
 
-
-
-    private void getAllWagers(){
+    public void getAllWagers(){
         boolean readyToRoll = false;
-        Integer amountWagered = 0;
         while(!readyToRoll){
-            CrapsWagerType wagerType = getWagerType();
-            if(!(wagerType == CrapsWagerType.NONE)) {
-                amountWagered = parseBet();
-                console.println("Betting $" + amountWagered + " on " + wagerType.toString());
-            }
-            else{
-                console.println("Betting is over, let the dice roll!");
-            }
-            readyToRoll = setWager(wagerType, amountWagered);
+            readyToRoll = getIndividualWager();
         }
         console.println("You are betting: \n" + this.playerWager.toString());
+    }
+
+    private boolean getIndividualWager(){
+        CrapsWagerType wagerType = getWagerType();
+        Integer amountWagered = 0;
+        if(!(wagerType == CrapsWagerType.NONE)) {
+            amountWagered = parseBet();
+            console.println("Betting $" + amountWagered + " on " + wagerType.toString());
+        }
+        else{
+            console.println("Betting is over, let the dice roll!");
+        }
+         return setWager(wagerType, amountWagered);
     }
 
     public boolean setWager(CrapsWagerType wagerType, Integer amountWagered) {
@@ -95,10 +97,6 @@ public class CrapsGame extends DiceGame implements GamblingGame {
         this.playerWager.setSeven(0);
     }
 
-    private void resetRoundNumber(){
-        //TODO
-        this.roundNum = 0;
-    }
 
     private Integer parseBet(){
         Integer amountWagered = console.getIntegerInput("How much would you like to bet? ");
@@ -185,36 +183,31 @@ public class CrapsGame extends DiceGame implements GamblingGame {
 
     public void play(){
         console.println(printGameRules());
-        pauseForReadability();
         while(this.gameState){
             nextTurn();
             this.roundNum++;
         }
-
         exit();
     }
 
     @Override
     public void nextTurn() {
-        // prompt for bet
-        // roll dice
-        // Print returned value
-        // check bets
-        // Payout where applicable
-        // if game > 1 and returned 7, change gameState
-        if(roundNum == 1) {
-            getRoundOneWager();
-        } else{
-            getAllWagers();
-        }
+        pickWager();
         console.println("Rolling the dice....");
-        pauseForReadability();
         this.dice.rollDice();
         console.println(printDiceValues());
         this.diceSum = this.dice.sumDice();
         payout();
         console.println("You now have $" + this.activePlayer.getBalance() + " in your account");
         this.gameState = checkGameState();
+    }
+
+    public void pickWager() {
+        if(roundNum == 1) {
+            getRoundOneWager();
+        } else{
+            getAllWagers();
+        }
     }
 
     @Override
@@ -225,7 +218,6 @@ public class CrapsGame extends DiceGame implements GamblingGame {
         else{
             return laterRoundGameState();
         }
-
     }
 
     public Boolean laterRoundGameState() {
@@ -238,19 +230,9 @@ public class CrapsGame extends DiceGame implements GamblingGame {
     }
 
 
-    private void pauseForReadability(){
-        try{
-            Thread.sleep(1000);
-        } catch (InterruptedException e){
-            Logger logger = Logger.getLogger(Casino.class.getName());
-            logger.log(Level.INFO, e.toString());
-        }
-    }
-
     @Override
     public void exit() {
         console.println("Thank you for playing craps");
-        pauseForReadability();
     }
 
     public CrapsWagerType getWagerType(){
@@ -361,6 +343,10 @@ public class CrapsGame extends DiceGame implements GamblingGame {
 
     public void setDiceSum(Integer sum){
         this.diceSum = sum;
+    }
+
+    public Integer getDiceSum(){
+        return this.diceSum;
     }
 
     public void setRoundNum(Integer roundNum){
