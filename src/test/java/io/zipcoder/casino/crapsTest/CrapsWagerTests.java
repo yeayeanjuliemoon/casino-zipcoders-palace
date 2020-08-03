@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CrapsWagerTests {
 
@@ -35,6 +36,29 @@ public class CrapsWagerTests {
 
         assertEquals(expectedWager, actualWager);
     }
+
+    @Test
+    public void testGetRoundOneWagerPassWrongWager(){
+        setUpWithInput("field\njsdhfki\npass\n100");
+        this.game.getRoundOneWager();
+        Integer expectedWager = 100;
+
+        Integer actualWager = this.game.getPlayerWager().getPass();
+
+        assertEquals(expectedWager, actualWager);
+    }
+
+    @Test
+    public void testGetRoundOneWagerNotEnoughMoney(){
+        setUpWithInput("pass\n10000\n100");
+        this.game.getRoundOneWager();
+        Integer expectedWager = 100;
+
+        Integer actualWager = this.game.getPlayerWager().getPass();
+
+        assertEquals(expectedWager, actualWager);
+    }
+
 
     @Test
     public void testGetRoundOneWagerDontPass(){
@@ -79,6 +103,15 @@ public class CrapsWagerTests {
         Integer actualAny = this.game.getPlayerWager().getAnyCraps();
 
         assertEquals(expectedAny, actualAny);
+    }
+
+    @Test
+    public void testNoWager(){
+        setUpWithInput("");
+
+        Boolean output = this.game.setWager(CrapsWagerType.NONE, 0);
+
+        assertTrue(output);
     }
 
     @Test
