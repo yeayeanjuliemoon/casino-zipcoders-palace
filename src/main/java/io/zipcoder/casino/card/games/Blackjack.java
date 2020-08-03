@@ -1,7 +1,6 @@
 package io.zipcoder.casino.card.games;
 
 import io.zipcoder.casino.*;
-import static io.zipcoder.casino.card.utilities.BlackjackCardValues.*;
 
 import io.zipcoder.casino.card.utilities.BlackjackCardValues;
 import io.zipcoder.casino.card.utilities.Card;
@@ -50,15 +49,11 @@ public class Blackjack extends CardGame implements GamblingGame {
     }
 
     public void determinePlayerMove(Boolean choseToDrawCard){
-        try{
             if(choseToDrawCard){ // Player chose to draw another card
                 dealCard(activePlayer, deck.draw());
             } else { // Player chose not to draw another card
                 gameState = false;
             }
-        } catch(NullPointerException e){ // Bad player input
-            determinePlayerMove(translatePlayerChoiceToBool(parsePlayerChoice()));
-        }
     }
 
     public Boolean translatePlayerChoiceToBool(String playerInput) {
@@ -72,17 +67,23 @@ public class Blackjack extends CardGame implements GamblingGame {
         }
     }
 
-    private String parsePlayerChoice(){
+    public void parsePlayerMoveChoice(){
         console.print("Would you like another card? yes/no");
         String playerInput = console.getStringInput("");
-        return playerInput.toLowerCase();
+        playerInput = playerInput.toLowerCase();
+        try{
+            Boolean playerInputAsBool = translatePlayerChoiceToBool(playerInput);
+            determinePlayerMove(playerInputAsBool);
+        } catch (NullPointerException e){
+            parsePlayerMoveChoice();
+        }
     }
 
     public Boolean playerBustTest(Integer playerHand) {
         return playerHand > 21;
     }
 
-    private void dealerTurnSim(){
+    public void dealerTurnSim(){
         console.println("Dealer hand: "+showHand(dealer));
         while(getHandValue(playerHands.get(dealer)) <=16){
             dealCard(dealer, deck.draw());
@@ -130,7 +131,7 @@ public class Blackjack extends CardGame implements GamblingGame {
         exit();
     }
 
-    private void gameSetup(){
+    public void gameSetup(){
         // Print Rules
         console.println(printGameRules());
         // Get a player's bet
@@ -140,7 +141,7 @@ public class Blackjack extends CardGame implements GamblingGame {
         pauseForReadability();
     }
 
-    private void playerPlaysTurn(){
+    public void playerPlaysTurn(){
         while(checkGameState()){
             nextTurn();
             if(playerGotTwentyOne(getHandValue(playerHands.get(activePlayer)))) {
@@ -151,8 +152,7 @@ public class Blackjack extends CardGame implements GamblingGame {
 
     public void nextTurn() {
         console.println("Your hand: "+showHand(activePlayer)+"\n");
-        determinePlayerMove(translatePlayerChoiceToBool(parsePlayerChoice()));
-
+        parsePlayerMoveChoice();
         if(playerBustTest(getHandValue(playerHands.get(activePlayer)))){
             gameState = false;
         }
@@ -164,7 +164,7 @@ public class Blackjack extends CardGame implements GamblingGame {
         payout();
     }
 
-    private void afterPlayerInput(){
+    public void afterPlayerInput(){
         if (!playerBustTest(getHandValue(playerHands.get(activePlayer)))) {
             dealerTurnSim();
             tallyWinners();
@@ -174,7 +174,7 @@ public class Blackjack extends CardGame implements GamblingGame {
         }
     }
 
-    private void tallyWinners() {
+    public void tallyWinners() {
         if (playerBustTest(getHandValue(playerHands.get(dealer)))) {
             console.println("Oh no! " + dealer.toString() + " went bust!");
             payout();
@@ -203,13 +203,7 @@ public class Blackjack extends CardGame implements GamblingGame {
     }
 
     public int cardValueCalculator(Card card){
-        //try{
-            return BlackjackCardValues.valueOfRank(card.getRank().toString());
-        //} catch (NullPointerException e){
-        //    Logger logger = Logger.getLogger(Blackjack.class.getName());
-        //    logger.log(Level.SEVERE, "invalid card rank passed to value calculator");
-        //    return 0;
-        //}
+        return BlackjackCardValues.valueOfRank(card.getRank().toString());
     }
 
     public Boolean checkGameState() {
@@ -233,6 +227,19 @@ public class Blackjack extends CardGame implements GamblingGame {
             logger.log(Level.INFO, e.toString());
         }
     }
+
+    public void setPlayerHand(List<Card> hand){
+        this.playerHands.put(this.activePlayer, hand);
+    }
+
+    public void setDealerHand(List<Card> hand) {
+        this.playerHands.put(dealer, hand);
+    }
+
+    public List<Card> getDealerHand(){
+        return this.playerHands.get(dealer);
+    }
+
     public void exit() {
         console.println("Thank you for playing blackjack!\n\n\n\n");
         pauseForReadability();

@@ -7,7 +7,10 @@ import io.zipcoder.casino.card.utilities.CardSuit;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,11 +21,21 @@ public class BlackJackTest {
     GamblingPlayer player;
     Blackjack blackjack;
     Logger logger = Logger.getLogger(BlackJackTest.class.getName());
+    ArrayList<Card> losingHand;
+    ArrayList<Card> twentyOneHand;
+
 
     @Before
     public void init() {
         player = new GamblingPlayer("aName");
         blackjack = new Blackjack(player);
+        losingHand =  new ArrayList<>();
+        losingHand.add(new Card(CardSuit.SPADE, CardRank.JACK));
+        losingHand.add(new Card(CardSuit.SPADE, CardRank.QUEEN));
+        losingHand.add(new Card(CardSuit.SPADE, CardRank.KING));
+        twentyOneHand =  new ArrayList<>();
+        twentyOneHand.add(new Card(CardSuit.SPADE, CardRank.JACK));
+        twentyOneHand.add(new Card(CardSuit.SPADE, CardRank.ACE));
     }
 
     @Test
@@ -120,6 +133,51 @@ public class BlackJackTest {
     }
 
     @Test
+    public void parsePlayerMoveYesTest() {
+        ByteArrayInputStream givenPlayerChoice = new ByteArrayInputStream(("yes\n").getBytes());
+        System.setIn(givenPlayerChoice);
+        this.blackjack = new Blackjack(player);
+
+        String originalHand = blackjack.showHand(player);
+        blackjack.parsePlayerMoveChoice();
+
+        String newHand = blackjack.showHand(player);
+        String newCard = newHand.substring(originalHand.length());
+        logger.log(Level.INFO, newCard);
+        assertTrue(newCard.length() > 1);
+    }
+
+    @Test
+    public void parsePlayerMoveNoTest() {
+        ByteArrayInputStream givenPlayerChoice = new ByteArrayInputStream(("no\n").getBytes());
+        System.setIn(givenPlayerChoice);
+        this.blackjack = new Blackjack(player);
+
+        String originalHand = blackjack.showHand(player);
+        blackjack.parsePlayerMoveChoice();
+
+        String newHand = blackjack.showHand(player);
+        String newCard = newHand.substring(originalHand.length());
+        logger.log(Level.INFO, newCard);
+        assertTrue(newCard.length() == 0);
+    }
+
+    @Test
+    public void parsePlayerMoveNullTest() {
+        ByteArrayInputStream givenPlayerChoice = new ByteArrayInputStream(("badinput\nno\n").getBytes());
+        System.setIn(givenPlayerChoice);
+        this.blackjack = new Blackjack(player);
+
+        String originalHand = blackjack.showHand(player);
+        blackjack.parsePlayerMoveChoice();
+
+        String newHand = blackjack.showHand(player);
+        String newCard = newHand.substring(originalHand.length());
+        logger.log(Level.INFO, newCard);
+        assertTrue(newCard.length() == 0);
+    }
+
+    @Test
     public void playerBustTest1() {
         Boolean actualResult = blackjack.playerBustTest(22);
         assertTrue(actualResult);
@@ -129,6 +187,20 @@ public class BlackJackTest {
     public void playerBustTest2() {
         Boolean actualResult = blackjack.playerBustTest(21);
         assertFalse(actualResult);
+    }
+
+    @Test
+    public void dealerTurnSimTest(){
+        ArrayList<Card> hand = new ArrayList<>();
+        hand.add(new Card(CardSuit.SPADE, CardRank.KING));
+        hand.add(new Card(CardSuit.SPADE, CardRank.FIVE));
+        blackjack.setDealerHand(hand);
+        String startingHand = blackjack.getDealerHand().toString();
+
+        blackjack.dealerTurnSim();
+        String endingHand = blackjack.getDealerHand().toString();
+
+        assertNotEquals(startingHand, endingHand);
     }
 
     @Test
@@ -142,6 +214,19 @@ public class BlackJackTest {
         assertEquals(40, postPayoutBalance);
     }
 
+    @Test
+    public void takeBetInsufficientTest() {
+        ByteArrayInputStream givenPlayerChoice = new ByteArrayInputStream(("20\n").getBytes());
+        System.setIn(givenPlayerChoice);
+        this.blackjack = new Blackjack(player);
+        player.deposit(20);
+
+        blackjack.takeBet(player, 40);
+        blackjack.payBack(); // Returns bet
+        int postPayoutBalance = player.getBalance();
+
+        assertEquals(20, postPayoutBalance);
+    }
     @Test
     public void sufficientFundsCheckTest1(){
         player.deposit(50);
@@ -183,6 +268,59 @@ public class BlackJackTest {
     }
 
     @Test
+    public void playTest(){
+        ByteArrayInputStream givenPlayerChoice = new ByteArrayInputStream(("20\nno\n").getBytes());
+        System.setIn(givenPlayerChoice);
+        this.blackjack = new Blackjack(player);
+        player.deposit(20);
+
+        blackjack.play();
+        int actual = player.getBalance();
+
+        assertNotEquals(20, actual);
+    }
+
+    @Test
+    public void gameSetupTest(){
+        ByteArrayInputStream givenPlayerChoice = new ByteArrayInputStream(("20\n").getBytes());
+        System.setIn(givenPlayerChoice);
+        this.blackjack = new Blackjack(player);
+        player.deposit(20);
+
+        blackjack.gameSetup();
+        blackjack.payout();
+        int actualBalance = player.getBalance();
+
+        assertEquals(40, actualBalance);
+    }
+    @Test
+    public void playerPlaysTurnTest(){
+        ByteArrayInputStream givenPlayerChoice = new ByteArrayInputStream(("no\n").getBytes());
+        System.setIn(givenPlayerChoice);
+        this.blackjack = new Blackjack(player);
+        player.deposit(20);
+        blackjack.takeBet(player, 20);
+
+        blackjack.setPlayerHand(twentyOneHand);
+        blackjack.playerPlaysTurn();
+        Boolean actualState = blackjack.checkGameState();
+
+        assertFalse(actualState);
+    }
+    @Test
+    public void nextTurnTest(){
+        ByteArrayInputStream givenPlayerChoice = new ByteArrayInputStream(("no\n").getBytes());
+        System.setIn(givenPlayerChoice);
+        this.blackjack = new Blackjack(player);
+
+        blackjack.setPlayerHand(losingHand);
+        blackjack.nextTurn();
+        Boolean actualState = blackjack.checkGameState();
+
+        assertFalse(actualState);
+    }
+
+    @Test
     public void endCasePlayerGotTwentyOneTest(){
         player.deposit(20);
 
@@ -195,7 +333,6 @@ public class BlackJackTest {
 
     @Test
     public void playerGotTwentyOneDidTest(){
-        //Given
         int givenHandValue = 21;
 
         boolean actual = blackjack.playerGotTwentyOne(givenHandValue);
@@ -205,13 +342,100 @@ public class BlackJackTest {
 
     @Test
     public void playerGotTwentyOneDidntTest(){
-        //Given
         int givenHandValue = 18;
 
         boolean actual = blackjack.playerGotTwentyOne(givenHandValue);
 
         assertFalse(actual);
     }
+
+    @Test
+    public void afterPlayerInputLosingTest(){
+        ArrayList<Card> hand = new ArrayList<>();
+        hand.add(new Card(CardSuit.SPADE, CardRank.KING));
+        blackjack.setDealerHand(hand);
+        String expected = blackjack.getDealerHand().toString();
+
+        blackjack.setPlayerHand(losingHand);
+        blackjack.afterPlayerInput();
+
+        String actual = blackjack.getDealerHand().toString();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void afterPlayerInputWinningTest(){
+        player.deposit(10);
+        blackjack.takeBet(player, 10);
+        blackjack.setDealerHand(losingHand);
+        String expected = blackjack.getDealerHand().toString();
+
+        blackjack.setPlayerHand(twentyOneHand);
+        blackjack.afterPlayerInput();
+
+        int actual = player.getBalance();
+
+        assertEquals(20, actual);
+    }
+
+    @Test
+    public void tallyWinnersDealerBustTest(){
+        player.deposit(10);
+        blackjack.takeBet(player, 10);
+        blackjack.setDealerHand(losingHand);
+
+        blackjack.tallyWinners();
+        int actual = player.getBalance();
+
+        assertEquals(20, actual);
+    }
+
+    @Test
+    public void tallyWinnersWinTest(){
+        player.deposit(10);
+        blackjack.takeBet(player, 10);
+        ArrayList<Card> hand = new ArrayList<>();
+        hand.add(new Card(CardSuit.SPADE, CardRank.KING));
+        blackjack.setDealerHand(hand);
+        blackjack.setPlayerHand(twentyOneHand);
+
+        blackjack.tallyWinners();
+        int actual = player.getBalance();
+
+        assertEquals(20, actual);
+    }
+
+    @Test
+    public void tallyWinnersDrawTest(){
+        player.deposit(10);
+        blackjack.takeBet(player, 10);
+        ArrayList<Card> hand = new ArrayList<>();
+        hand.add(new Card(CardSuit.SPADE, CardRank.KING));
+        blackjack.setDealerHand(hand);
+        blackjack.setPlayerHand(hand);
+
+        blackjack.tallyWinners();
+        int actual = player.getBalance();
+
+        assertEquals(10, actual);
+    }
+
+    @Test
+    public void tallyWinnersLostTest(){
+        player.deposit(10);
+        blackjack.takeBet(player, 10);
+        ArrayList<Card> hand = new ArrayList<>();
+        hand.add(new Card(CardSuit.SPADE, CardRank.KING));
+        blackjack.setDealerHand(twentyOneHand);
+        blackjack.setPlayerHand(hand);
+
+        blackjack.tallyWinners();
+        int actual = player.getBalance();
+
+        assertEquals(0, actual);
+    }
+
 
     @Test
     public void endCaseWinningHandWonTest(){
