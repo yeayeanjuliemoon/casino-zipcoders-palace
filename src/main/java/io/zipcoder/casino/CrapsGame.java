@@ -179,7 +179,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
         }
     }
 
-    private void setPoint(Integer point){
+    public void setPoint(Integer point){
         this.point = point;
     }
 
@@ -211,6 +211,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
         pauseForReadability();
         this.dice.rollDice();
         console.println(printDiceValues());
+        this.diceSum = this.dice.sumDice();
         payout();
         console.println("You now have $" + this.activePlayer.getBalance() + " in your account");
         this.gameState = checkGameState();
@@ -263,7 +264,6 @@ public class CrapsGame extends DiceGame implements GamblingGame {
     }
 
     public Boolean winWager(CrapsWagerType wagerType){
-        this.diceSum = this.dice.sumDice();
         switch (wagerType){
             case PASS:
                 return passWager();
@@ -361,6 +361,10 @@ public class CrapsGame extends DiceGame implements GamblingGame {
 
     public void setDiceSum(Integer sum){
         this.diceSum = sum;
+    }
+
+    public void setRoundNum(Integer roundNum){
+        this.roundNum = roundNum;
     }
 
 }
