@@ -186,7 +186,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
     public void play(){
         console.println(printGameRules());
         pauseForReadability();
-        while(gameState){
+        while(this.gameState){
             nextTurn();
             this.roundNum++;
         }
@@ -219,7 +219,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
 
     @Override
     public Boolean checkGameState() {
-        if(roundNum == 1) {
+        if(this.roundNum == 1) {
             return roundOneGameState();
         }
         else{
@@ -234,7 +234,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
 
     public Boolean roundOneGameState() {
         List<Integer> endingValues = new ArrayList<>(Arrays.asList(7, 11, 2, 3, 12));
-        return endingValues.contains(this.diceSum);
+        return !endingValues.contains(this.diceSum);
     }
 
 

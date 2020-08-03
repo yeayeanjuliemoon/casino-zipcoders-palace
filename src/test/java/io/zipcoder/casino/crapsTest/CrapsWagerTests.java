@@ -153,6 +153,26 @@ public class CrapsWagerTests {
     }
 
     @Test
+    public void testPayout2(){
+        setUpWithInput("");
+        this.game.setDiceSum(2);
+        // Sum of 2 on round 1, dontpass, field, anycraps win
+        // -200, +600 from any, +200 from field, +100 from dontpass
+        Integer expectedBalance = 1700;
+        this.game.setWager(CrapsWagerType.PASS, 100);
+        this.game.setWager(CrapsWagerType.DONTPASS, 100);
+        this.game.setWager(CrapsWagerType.SEVENS, 100);
+        this.game.setWager(CrapsWagerType.FIELD, 100);
+        this.game.setWager(CrapsWagerType.ANYCRAPS, 100);
+
+        this.game.payout();
+
+        Integer actualBalance = this.mainPlayer.getBalance();
+
+        assertEquals(expectedBalance, actualBalance);
+    }
+
+    @Test
     public void testPassWagerRound1(){
         setUpWithInput("");
         this.game.setDiceSum(7);
@@ -184,6 +204,25 @@ public class CrapsWagerTests {
         this.game.setRoundNum(2);
 
         assertTrue(this.game.winWager(CrapsWagerType.DONTPASS));
+    }
+
+    @Test
+    public void testGameStateTrue(){
+        setUpWithInput("");
+        this.game.setDiceSum(8);
+        this.game.setPoint(1);
+
+        assertTrue(this.game.checkGameState());
+    }
+
+    @Test
+    public void testGameStateFalse(){
+        setUpWithInput("");
+        this.game.setDiceSum(4);
+        this.game.setPoint(4);
+        this.game.setRoundNum(2);
+
+        assertFalse(this.game.checkGameState());
     }
 
 
