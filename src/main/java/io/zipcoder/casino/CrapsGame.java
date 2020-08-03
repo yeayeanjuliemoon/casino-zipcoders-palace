@@ -26,7 +26,7 @@ public class CrapsGame extends DiceGame implements GamblingGame {
         this.activePlayer = player;
     }
 
-    private void getRoundOneWager(){
+    public void getRoundOneWager(){
         boolean readyToRoll = false;
         while(!readyToRoll){
             CrapsWagerType wagerType = getWagerType();
@@ -60,12 +60,12 @@ public class CrapsGame extends DiceGame implements GamblingGame {
             else{
                 console.println("Betting is over, let the dice roll!");
             }
-            readyToRoll = setWager( wagerType, amountWagered);
+            readyToRoll = setWager(wagerType, amountWagered);
         }
         console.println("You are betting: \n" + this.playerWager.toString());
     }
 
-    private boolean setWager(CrapsWagerType wagerType, Integer amountWagered) {
+    public boolean setWager(CrapsWagerType wagerType, Integer amountWagered) {
         switch(wagerType){
             case PASS:
                 this.playerWager.setPass(amountWagered);
@@ -323,6 +323,10 @@ public class CrapsGame extends DiceGame implements GamblingGame {
                 "\tanycraps - Past the first round, you are betting that the dice will hit craps (7x Odds)\n\n" +
                 "Each round, enter the type bet you would like to make and the amount you want to bet. Enter\n" +
                 "'none' when you are done betting for each round.\n\n Good Luck!\n";
+    }
+
+    public CrapsWager getPlayerWager(){
+        return this.playerWager;
     }
 
 }
