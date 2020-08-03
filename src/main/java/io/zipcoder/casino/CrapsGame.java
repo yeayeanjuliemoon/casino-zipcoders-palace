@@ -318,7 +318,8 @@ public class CrapsGame extends DiceGame implements GamblingGame {
                 "\t9, 10, 11, 12 (3x Odds)\n\n" + "\tsevens - Past the first round, you are betting that the dice will roll a 7 (5x Odds)\n\n" +
                 "\tanycraps - Past the first round, you are betting that the dice will hit craps (7x Odds)\n\n" +
                 "Each round, enter the type bet you would like to make and the amount you want to bet. Enter\n" +
-                "'none' when you are done betting for each round.\n\n Good Luck!\n";
+                "'none' when you are done betting for each round. All bets that are not Pass or Don't Pass\n" +
+                "are cleared between rounds.\n\n Good Luck!\n";
     }
 
 }
