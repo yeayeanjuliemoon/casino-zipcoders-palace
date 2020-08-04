@@ -25,12 +25,26 @@ public class CasinoTest {
     public void createPlayerTest(){
         ByteArrayInputStream in = new ByteArrayInputStream(("no").getBytes());
         System.setIn(in);
+        casino = new Casino();
 
         Player player = casino.createPlayer(givenName);
 
         String actualName = player.toString();
 
         assertEquals(givenName, actualName);
+    }
+
+    @Test
+    public void createPlayerGamblingTest(){
+        ByteArrayInputStream in = new ByteArrayInputStream(("yes\n40\n").getBytes());
+        System.setIn(in);
+        casino = new Casino();
+
+        Player player = casino.createPlayer(givenName);
+
+        int actualBalance = ((GamblingPlayer)player).getBalance();
+
+        assertEquals(40, actualBalance);
     }
 
     @Test
