@@ -18,17 +18,29 @@ public class CeeLoGame extends DiceGame {
         this.player = player;
     }
 
+    public void setConsole(Console console) {
+        this.console = console;
+    }
+
+    public Integer getBet() {
+        return this.bet;
+    }
+
+    public void setBet(Integer bet) {
+        this.bet = bet;
+    }
+
     public Integer getPot() {
         return this.pot;
     }
 
-    @Override
-    public void takeBet() {
+    public void setPot() {
         while (this.bet > player.getBalance()) {
             this.bet = this.console.getIntegerInput(CeeLoConstant.INVALID_BET_PROMPT);
         }
 
         this.pot = 2 * bet;
+        this.console.println(CeeLoConstant.CURRENT_POT + this.getPot());
     }
 
     public List<Integer> getDiceRoll() {
@@ -78,24 +90,7 @@ public class CeeLoGame extends DiceGame {
     }
 
     public void play() {
-        String userString = this.console.getStringInput(CeeLoConstant.WELCOME_BET_PROMPT);
-        while (!userString.toLowerCase().equals(CeeLoConstant.YES) && !userString.toLowerCase().equals(CeeLoConstant.NO)) {
-            userString = this.console.getStringInput(CeeLoConstant.INVALID_YES_OR_NO_PROMPT);
-        }
-
-        if ((userString.toLowerCase().equals(CeeLoConstant.NO))) {
-            exit();
-            return;
-        } else if (userString.toLowerCase().equals(CeeLoConstant.YES)) {
-            this.bet = this.console.getIntegerInput(CeeLoConstant.BET_AMOUNT_PROMPT);
-            takeBet();
-            this.console.println(CeeLoConstant.CURRENT_POT + this.getPot());
-            String playerString = this.console.getStringInput(CeeLoConstant.RULES_PROMPT);
-            if (playerString.toLowerCase().equals(CeeLoConstant.YES)) {
-                this.console.println(this.printGameRules());
-            }
-        }
-
+        startGame();
         boolean replay = true;
         while (replay) {
             this.console.getStringInput(CeeLoConstant.ROLL_DICE_PROMPT);
@@ -105,41 +100,59 @@ public class CeeLoGame extends DiceGame {
             if (!playerTurn.equals("") || !houseTurn.equals("")) {
                 replay = false;
                 if (playerTurn.equals(CeeLoConstant.PLAYER) || houseTurn.equals(CeeLoConstant.PLAYER)) {
-                    this.console.println(CeeLoConstant.PLAYER_WINS);
-                    this.console.println(CeeLoConstant.DEPOSIT_POT + this.getPot());
                     payout();
-                    this.console.println(CeeLoConstant.UPDATED_BALANCE + player.getBalance());
-                    this.console.println(CeeLoConstant.SCORE + printScore());
-                    String continueOrLeave = this.console.getStringInput(CeeLoConstant.ASK_TO_REPLAY);
-                    if (continueOrLeave.equals(CeeLoConstant.YES)) {
-                        replay = true;
-                        this.bet = this.console.getIntegerInput(CeeLoConstant.BET_AMOUNT_PROMPT);
-                        takeBet();
-                        this.console.println(CeeLoConstant.CURRENT_POT + this.getPot());
-                    }
-                    exit();
+                    printResults(CeeLoConstant.PLAYER_WINS);
+                    replay = playAgain(replay);
                 } else if (playerTurn.equals(CeeLoConstant.HOUSE) || houseTurn.equals(CeeLoConstant.HOUSE)) {
-                    this.console.println(CeeLoConstant.HOUSE_WINS);
-                    this.console.println(CeeLoConstant.SCORE + printScore());
-                    String continueOrLeave = this.console.getStringInput(CeeLoConstant.ASK_TO_REPLAY);
-                    if (continueOrLeave.equals(CeeLoConstant.YES)) {
-                        replay = true;
-                        this.bet = this.console.getIntegerInput(CeeLoConstant.BET_AMOUNT_PROMPT);
-                        takeBet();
-                        this.console.println(CeeLoConstant.CURRENT_POT + this.getPot());
-                    }
+                    printResults(CeeLoConstant.HOUSE_WINS);
+                    replay = playAgain(replay);
                 }
             }
         }
     }
 
+    public boolean playAgain(boolean replayOrNot) {
+        String continueOrLeave = this.console.getStringInput(CeeLoConstant.ASK_TO_REPLAY);
+        if (continueOrLeave.equals(CeeLoConstant.YES)) {
+            replayOrNot = true;
+            takeBet();
+            setPot();
+        } else
+            exit();
 
-    public void nextTurn() {
-
+        return replayOrNot;
     }
 
-    public Boolean checkGameState() {
-        return null;
+    public void printResults(String winnerString) {
+        this.console.println(winnerString);
+        this.console.println(CeeLoConstant.UPDATED_BALANCE + player.getBalance());
+        this.console.println(CeeLoConstant.SCORE + printScore());
+    }
+
+    public void takeBet() {
+        setBet(this.console.getIntegerInput(CeeLoConstant.BET_AMOUNT_PROMPT));
+    }
+
+    public void startGame() {
+        String userString = this.console.getStringInput(CeeLoConstant.WELCOME_BET_PROMPT);
+        while (!userString.toLowerCase().equals(CeeLoConstant.YES) && !userString.toLowerCase().equals(CeeLoConstant.NO)) {
+            userString = this.console.getStringInput(CeeLoConstant.INVALID_YES_OR_NO_PROMPT);
+        }
+
+        if ((userString.toLowerCase().equals(CeeLoConstant.NO))) {
+            exit();
+            return;
+        } else if (userString.toLowerCase().equals(CeeLoConstant.YES)) {
+            takeBet();
+            setPot();
+            String playerString = this.console.getStringInput(CeeLoConstant.RULES_PROMPT);
+
+            if (playerString.toLowerCase().equals(CeeLoConstant.YES)) {
+                this.console.println(this.printGameRules());
+            }
+
+            setPot();
+        }
     }
 
     public String printScore() {
@@ -147,6 +160,10 @@ public class CeeLoGame extends DiceGame {
         result += this.playerScore;
 
         return result;
+    }
+
+    public Integer getScore() {
+        return this.playerScore;
     }
 
     public String printGameRules() {
@@ -161,6 +178,13 @@ public class CeeLoGame extends DiceGame {
         player.deposit(getPot());
         playerScore++;
         this.pot = 0;
+    }
+
+    public void nextTurn() {
+    }
+
+    public Boolean checkGameState() {
+        return null;
     }
 }
 

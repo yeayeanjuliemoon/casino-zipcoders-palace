@@ -1,5 +1,4 @@
 package io.zipcoder.casino;
-//
 
 public enum WinningDiceCombo {
     WIN1("456"),
