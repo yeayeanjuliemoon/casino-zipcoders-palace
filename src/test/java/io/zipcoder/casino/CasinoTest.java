@@ -218,7 +218,19 @@ public class CasinoTest {
     }
 
     @Test
-    public void parseMenuInputTest(){
+    public void parseMenuInput1Test(){
+        ByteArrayInputStream in = new ByteArrayInputStream(("1\naName\nno\n").getBytes());
+        System.setIn(in);
+        casino = new Casino();
+
+        casino.parseMenuInput();
+        int actual = casino.isAPlayer("aName");
+
+        assertNotEquals(-1, actual);
+    }
+
+    @Test
+    public void parseMenuInput6Test(){
         ByteArrayInputStream in = new ByteArrayInputStream(("6\n").getBytes());
         System.setIn(in);
         casino = new Casino();
@@ -229,6 +241,19 @@ public class CasinoTest {
         boolean actual = casino.checkIfActivePlayer();
 
         assertFalse(actual);
+    }
+
+    @Test
+    public void parseMenuInputDDefaultTest(){
+        ByteArrayInputStream in = new ByteArrayInputStream(("badInput\n1\naName\nno\n").getBytes());
+        System.setIn(in);
+        casino = new Casino();
+
+
+        casino.parseMenuInput();
+        int actual = casino.isAPlayer("aName");
+
+        assertNotEquals(-1, actual);
     }
 
     @Test

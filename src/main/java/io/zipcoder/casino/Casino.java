@@ -1,11 +1,8 @@
 package io.zipcoder.casino;
 
-import io.zipcoder.casino.card.games.Blackjack;
-import io.zipcoder.casino.card.games.GoFish;
-
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+//import java.util.logging.Level;
+//import java.util.logging.Logger;
 
 public class Casino {
 
@@ -113,7 +110,7 @@ public class Casino {
             return true;
         } else {
             console.println("No player currently logged in");
-            pauseForReadability();
+            //ForReadability();
             return false;
         }
     }
@@ -137,16 +134,16 @@ public class Casino {
                 playerLogin(console.getStringInput("What is your name?"));
                 break;
             case 2: //GoFish
-                gameLogin(new GoFish(5,this.activePlayer));
+                gameLogin(GameFactory.getGame("GOFISH", this.activePlayer));
                 break;
             case 3: //BlackJack
-                gameLogin(new Blackjack(this.activePlayer));
+                gameLogin(GameFactory.getGame("BLACKJACK", this.activePlayer)); //new Blackjack(this.activePlayer));
                 break;
             case 4: // Craps
-                gameLogin(new CrapsGame((GamblingPlayer) this.activePlayer));
+                gameLogin(GameFactory.getGame("CRAPS", this.activePlayer));  //new CrapsGame(this.activePlayer));
                 break;
             case 5: // CeeLo
-                gameLogin(new CeeLoGame((GamblingPlayer) this.activePlayer));
+                gameLogin(GameFactory.getGame("CEELO", this.activePlayer));  //new CeeLoGame(this.activePlayer));
                 break;
             case 6: // Logout
                 playerLogout();
@@ -156,13 +153,15 @@ public class Casino {
                 break;
             default:
                 console.println("Please enter a valid selection (1 -> 9)");
-                pauseForReadability();
+                //pauseForReadability();
         }
     }
 
     public void gameLogin(Game aGame){
         if(checkIfActivePlayer()) {
-            if (aGame instanceof GamblingGame) {
+            if(aGame == null){
+                checkIfGamblingPlayer();
+            } else if (aGame instanceof GamblingGame) {
                 gamblingGameLogin(aGame);
             } else {
                 selectGame(aGame);
@@ -171,10 +170,8 @@ public class Casino {
     }
 
     public void gamblingGameLogin(Game aGame){
-        if (checkIfGamblingPlayer()){
-            parseBalanceAdd();
-            selectGame(aGame);
-        }
+        parseBalanceAdd();
+        selectGame(aGame);
     }
 
     public void parseBalanceAdd(){
@@ -198,22 +195,21 @@ public class Casino {
         }
     }
 
-    private void pauseForReadability(){
+    /*private void pauseForReadability(){
         try{
             Thread.sleep(1500);
         } catch (InterruptedException e){
             Logger logger = Logger.getLogger(Casino.class.getName());
             logger.log(Level.INFO, e.toString());
         }
-
-    }
+    }*/
 
     public Boolean checkIfActivePlayer() {
         if(this.activePlayer != null){
             return true;
         } else{
             console.println("No player currently logged in");
-            pauseForReadability();
+            //pauseForReadability();
             return false;
         }
     }
@@ -222,8 +218,8 @@ public class Casino {
         if(activePlayer instanceof GamblingPlayer){
             return true;
         } else {
-            console.print("Come back when you're ready to gamble!\n");
-            pauseForReadability();
+            console.print("Come back when you're able to gamble!\n");
+            //pauseForReadability();
             return false;
         }
     }
