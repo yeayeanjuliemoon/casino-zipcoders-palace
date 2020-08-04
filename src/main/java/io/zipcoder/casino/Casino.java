@@ -29,17 +29,25 @@ public class Casino {
         }
     }
 
-    public Player createPlayer(String aName){
-        if (getGamblingStatus()) {
-            GamblingPlayer aGamblingPlayer = new GamblingPlayer(aName);
-            aGamblingPlayer.deposit(console.getIntegerInput("Please enter a starting wallet balance."));
-            this.listOfPlayers.add(aGamblingPlayer);
-            return aGamblingPlayer;
+    public Player createPlayerOptions(String aName){
+        if (parseGamblingStatus()) {
+            return createGamblingPlayer(aName);
         } else {
-            Player aPlayer = new Player(aName);
-            this.listOfPlayers.add(aPlayer);
-            return aPlayer;
+            return createPlayer(aName);
         }
+    }
+
+    public GamblingPlayer createGamblingPlayer(String aName){
+        GamblingPlayer aGamblingPlayer = new GamblingPlayer(aName);
+        aGamblingPlayer.deposit(console.getIntegerInput("Please enter a starting wallet balance."));
+        this.listOfPlayers.add(aGamblingPlayer);
+        return aGamblingPlayer;
+    }
+
+    public Player createPlayer(String aName){
+        Player aPlayer = new Player(aName);
+        this.listOfPlayers.add(aPlayer);
+        return aPlayer;
     }
 
     public void selectGame(Game selectedGame) {
@@ -70,10 +78,10 @@ public class Casino {
         if(isAPlayer(givenName) >= 0){
             this.activePlayer = listOfPlayers.get(isAPlayer(givenName));
         } else {
-            this.activePlayer = createPlayer(givenName);
+            this.activePlayer = createPlayerOptions(givenName);
         }
-        console.print(activePlayer.toString()+" is now logged in");
-        pauseForReadability();
+        console.print(activePlayer.toString()+" is now logged in\n");
+        //pauseForReadability();
     }
 
     public Integer isAPlayer(String givenName){
@@ -85,26 +93,28 @@ public class Casino {
         return -1;
     }
 
-    public Boolean getGamblingStatus(){
-        console.print("Are you a gambling player? yes/no");
-        while(true) {
-            String userInput = console.getStringInput("");
-            if (userInput.toLowerCase().equals("yes")) {
-                return true;
-            } else if (userInput.toLowerCase().equals("no")) {
-                return false;
-            } else {
-                console.print("Please enter \"yes\" or \"no\"");
+    public Boolean parseGamblingStatus(){
+        while(true){
+            String userInput = console.getStringInput("Are you a gambling player? yes/no").toLowerCase();
+            if(userInput.equals("yes") || userInput.equals("no")){
+                return getGamblingStatus(userInput);
             }
+            console.print("Please enter \"yes\" or \"no\"");
         }
     }
 
-    public void playerLogout() {
+    public Boolean getGamblingStatus(String userInput){
+        return userInput.equals("yes");
+    }
+
+    public Boolean playerLogout() {
         if(checkIfActivePlayer()){
             this.activePlayer = null;
+            return true;
         } else {
             console.println("No player currently logged in");
             pauseForReadability();
+            return false;
         }
     }
 
@@ -151,38 +161,40 @@ public class Casino {
     }
 
     public void gameLogin(Game aGame){
-        if(checkIfActivePlayer()){
-            if(aGame instanceof GamblingGame) {
-                if (checkIfGamblingPlayer()) {
-                    addToPlayerBalance();
-                    selectGame(aGame);
-                }
-            }
-            else {
+        if(checkIfActivePlayer()) {
+            if (aGame instanceof GamblingGame) {
+                gamblingGameLogin(aGame);
+            } else {
                 selectGame(aGame);
             }
-        } else {
-            console.println("No player currently logged in");
-            pauseForReadability();
         }
     }
 
-    public void addToPlayerBalance(){
+    public void gamblingGameLogin(Game aGame){
+        if (checkIfGamblingPlayer()){
+            parseBalanceAdd();
+            selectGame(aGame);
+        }
+    }
+
+    public void parseBalanceAdd(){
         console.println("You currently have $"+ ((GamblingPlayer)this.activePlayer).getBalance() + " in your account");
-        console.print("Would you like to add to your balance before your game begins? yes/no");
         while(true) {
-            String userInput = console.getStringInput("");
+            String userInput = console.getStringInput("Would you like to add to your balance before your game begins? yes/no");
             if (userInput.toLowerCase().equals("yes")) {
-                Integer balanceAdd = console.getIntegerInput("How much would you like to add?");
-                if(balanceAdd > 0){
-                    ((GamblingPlayer)this.activePlayer).deposit(balanceAdd);
-                }
+                addToPlayerBalance(console.getIntegerInput("How much would you like to add?"));
                 break;
             } else if (userInput.toLowerCase().equals("no")) {
                 break;
             } else {
                 console.print("Please enter \"yes\" or \"no\"");
             }
+        }
+    }
+
+    public void addToPlayerBalance(Integer balanceAdd){
+        if(balanceAdd > 0){
+            ((GamblingPlayer)this.activePlayer).deposit(balanceAdd);
         }
     }
 
@@ -200,6 +212,8 @@ public class Casino {
         if(this.activePlayer != null){
             return true;
         } else{
+            console.println("No player currently logged in");
+            pauseForReadability();
             return false;
         }
     }
@@ -212,6 +226,10 @@ public class Casino {
             pauseForReadability();
             return false;
         }
+    }
+
+    public Game getActiveGame(){
+        return this.currentGame;
     }
 
     public void quit() {
