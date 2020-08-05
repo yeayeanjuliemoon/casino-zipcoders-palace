@@ -1,33 +1,35 @@
 package io.zipcoder.casino;
 
+import io.zipcoder.casino.card.utilities.CeeLoConstant;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Matchers.isA;
+
 public class CeeLoGameTest {
 
-    @Test
-    public void testTakeBet() {
-        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
-        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
+    GamblingPlayer gamblingPlayer;
+    CeeLoGame ceeLoGame;
+    Console console;
 
-        gamblingPlayer.deposit(100);
-
-        ceeLoGame.takeBet(100);
-
-        Integer expected = 200;
-        Integer actual = ceeLoGame.getPot();
-
-        Assert.assertEquals(expected, actual);
+    @Before
+    public void setup() {
+        gamblingPlayer = new GamblingPlayer("Billy");
+        ceeLoGame = new CeeLoGame(gamblingPlayer);
+        console = Mockito.mock(Console.class);
     }
 
     @Test
     public void testGetDiceRoll() {
-        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
-        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
-
         List<Integer> actual = ceeLoGame.getDiceRoll();
         Assert.assertEquals(3, actual.size());
 
@@ -37,85 +39,95 @@ public class CeeLoGameTest {
     }
 
     @Test
-    public void testCheckPlayer() {
-        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
-        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
-
-        List<Integer> testArray1 = new ArrayList<>();
-        testArray1.add(4);
-        testArray1.add(5);
-        testArray1.add(6);
-
+    public void testCheckRoll() {
+        List<Integer> values = new ArrayList<>();
         String expected = "Player";
-        String actual = ceeLoGame.checkPlayer(testArray1);
+
+        values.add(4);
+        values.add(5);
+        values.add(6);
+
+        String actual = ceeLoGame.checkRoll(values, "Player", "House");
 
         Assert.assertEquals(expected, actual);
-
-        List<Integer> testArray2 = new ArrayList<>();
-        testArray2.add(1);
-        testArray2.add(1);
-        testArray2.add(6);
-
-        String expected1 = "Player";
-        String actual1 = ceeLoGame.checkPlayer(testArray2);
-
-        Assert.assertEquals(expected1, actual1);
-
     }
 
     @Test
-    public void testCheckHouse() {
-        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
-        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
+    public void testCheckForWin() {
+        Assert.assertTrue(ceeLoGame.checkForWin("456"));
+        Assert.assertTrue(ceeLoGame.checkForWin("611"));
+    }
 
-        List<Integer> testArray1 = new ArrayList<>();
-        testArray1.add(4);
-        testArray1.add(5);
-        testArray1.add(6);
+    @Test
+    public void testCheckForLoss() {
+        Assert.assertTrue(ceeLoGame.checkForLoss("123"));
+        Assert.assertTrue(ceeLoGame.checkForLoss("144"));
+    }
 
-        String expected = "House";
-        String actual = ceeLoGame.checkHouse(testArray1);
+    @Test
+    public void testPlayAgain() {
+        ceeLoGame.setConsole(this.console);
+        Mockito.doReturn("yes").when(this.console).getStringInput(isA(String.class));
+        Assert.assertTrue(ceeLoGame.playAgain(false));
+    }
+
+    @Test
+    public void testTakeBet() {
+        ceeLoGame.setConsole(this.console);
+
+        Integer expected = 200;
+        Mockito.doReturn(expected).when(this.console).getIntegerInput(isA(String.class));
+
+        ceeLoGame.takeBet();
+        Integer actual = ceeLoGame.getBet();
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testSetPot() {
+        Integer bet = 200;
+        Integer expected = 400;
+
+        gamblingPlayer.deposit(500);
+        ceeLoGame.setBet(bet);
+        ceeLoGame.setPot();
+
+        Integer actual = ceeLoGame.getPot();
 
         Assert.assertEquals(expected, actual);
 
-        List<Integer> testArray2 = new ArrayList<>();
-        testArray2.add(1);
-        testArray2.add(1);
-        testArray2.add(6);
-
-        String expected1 = "House";
-        String actual1 = ceeLoGame.checkHouse(testArray2);
-
-        Assert.assertEquals(expected1, actual1);
     }
 
     @Test
     public void testPrintScore() {
-        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
-        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
-
         String actual = ceeLoGame.printScore();
-        String expected = "The player's score is " + 0;
+        String expected = "0";
 
         Assert.assertEquals(expected, actual);
     }
 
     @Test
-    public void testPrintGameRules() {
-        GamblingPlayer gamblingPlayer = new GamblingPlayer("Billy");
-        CeeLoGame ceeLoGame = new CeeLoGame(gamblingPlayer);
+    public void testPayout() {
+        gamblingPlayer.deposit(300);
+        ceeLoGame.setBet(100);
+        ceeLoGame.setPot();
 
+        ceeLoGame.payout();
+
+        Integer expectedPot = 0;
+        Assert.assertEquals(expectedPot, ceeLoGame.getPot());
+
+        Integer expectedScore = 1;
+        Assert.assertEquals(expectedScore, ceeLoGame.getScore());
+    }
+
+    @Test
+    public void testPrintGameRules() {
         String actual = ceeLoGame.printGameRules();
-        String expected = "======================================================================================= \n" +
-                "Automatic Win: Player wins automatically if one of the following combinations are rolled: \n" +
-                " 4-5-6, triples of same number, doubles with same number with a third showing a 6\n" +
-                "Automatic Loss: Player loses automatically if one of the following combinations are rolled: \n" +
-                "1-2-3, doubles with same number with third showing a 1\n" +
-                "Re-roll: When none of the above combinations are rolled, player needs to re-roll until one of the above combinations are rolled.\n" +
-                "=======================================================================================";
+        String expected = CeeLoConstant.CEELO_RULES;
 
         Assert.assertEquals(expected, actual);
     }
-
 
 }
