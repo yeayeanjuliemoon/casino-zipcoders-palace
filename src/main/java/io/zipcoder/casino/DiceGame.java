@@ -12,7 +12,7 @@ public abstract class DiceGame implements Game, GamblingGame {
     }
 
     public String printDiceValues(){
-        List<Integer> diceList = dice.getDieValues();
+        List<Integer> diceList = dice.getDiceValues();
         StringBuilder sb = new StringBuilder();
         for(Integer i : diceList){
             sb.append("[ " + i.toString() + " ]");
