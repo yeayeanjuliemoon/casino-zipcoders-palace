@@ -218,7 +218,6 @@ public class Blackjack extends CardGame implements GamblingGame {
         return rules;
     }
 
-    // TODO - Look into libraries for delaying system printing vs halting whole thread
     private void pauseForReadability(){
         try{
             Thread.sleep(1000);

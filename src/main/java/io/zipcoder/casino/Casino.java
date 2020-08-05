@@ -110,7 +110,7 @@ public class Casino {
             return true;
         } else {
             console.println("No player currently logged in");
-            //ForReadability();
+            //PauseForReadability();
             return false;
         }
     }
@@ -137,13 +137,13 @@ public class Casino {
                 gameLogin(GameFactory.getGame("GOFISH", this.activePlayer));
                 break;
             case 3: //BlackJack
-                gameLogin(GameFactory.getGame("BLACKJACK", this.activePlayer)); //new Blackjack(this.activePlayer));
+                gameLogin(GameFactory.getGame("BLACKJACK", this.activePlayer));
                 break;
             case 4: // Craps
-                gameLogin(GameFactory.getGame("CRAPS", this.activePlayer));  //new CrapsGame(this.activePlayer));
+                gameLogin(GameFactory.getGame("CRAPS", this.activePlayer));
                 break;
             case 5: // CeeLo
-                gameLogin(GameFactory.getGame("CEELO", this.activePlayer));  //new CeeLoGame(this.activePlayer));
+                gameLogin(GameFactory.getGame("CEELO", this.activePlayer));
                 break;
             case 6: // Logout
                 playerLogout();

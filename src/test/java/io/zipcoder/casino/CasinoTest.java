@@ -69,31 +69,6 @@ public class CasinoTest {
         assertEquals(40, actualBalance);
     }
 
-    /*@Test TODO - there must be a better way to do this
-    public void selectGameTest(){
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PrintStream outboundMessaging = new PrintStream(outputStream);
-        System.setOut(outboundMessaging);
-
-        ByteArrayInputStream in = new ByteArrayInputStream(("0"+ System.lineSeparator() + "no").getBytes());
-        System.setIn(in);
-
-        Player player = new GamblingPlayer(givenName);
-        Blackjack blackjack = new Blackjack(player);
-        casino.selectGame(blackjack);
-
-        String expectedOutput = "* The goal of the game is to beat the dealer's hand without going over 21\n" +
-                "* You and the dealer start with two cards. One of the dealer's cards is hidden until their turn.\n" +
-                "* You can ask for additional cards until you want to stop or you go over 21.\n" +
-                "* Cards Two through Ten are face value. Face cards are worth 10. Aces are worth 1 or 11.";
-        System.out.flush();
-        String actualOutput = outputStream.toString();
-        actualOutput = actualOutput.substring(0,336);
-
-        assertEquals(expectedOutput, actualOutput);
-
-    } */
-
     @Test
     public void printCasinoMenuTest() {
         String actualResult = casino.printCasinoMenu();

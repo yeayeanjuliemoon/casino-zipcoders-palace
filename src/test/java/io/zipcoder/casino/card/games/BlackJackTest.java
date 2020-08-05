@@ -109,8 +109,7 @@ public class BlackJackTest {
         blackjack.determinePlayerMove(givenPlayerChoice);
 
         String newHand = blackjack.showHand(player);
-        //String newCard = newHand.substring(originalHand.length());
-        //logger.log(Level.INFO, newCard);
+
         assertTrue(originalHand.equals(newHand));
     }
 
