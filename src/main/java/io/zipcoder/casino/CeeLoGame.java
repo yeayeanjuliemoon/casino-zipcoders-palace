@@ -38,9 +38,9 @@ public class CeeLoGame extends DiceGame {
         while (this.bet > player.getBalance()) {
             this.bet = this.console.getIntegerInput(CeeLoConstant.INVALID_BET_PROMPT);
         }
-
-        this.pot = 2 * bet;
-        this.console.println(CeeLoConstant.CURRENT_POT + this.getPot());
+        player.withdraw(getBet());
+        this.pot = 2 * this.bet;
+        this.console.println(CeeLoConstant.CURRENT_POT + getPot());
     }
 
     public List<Integer> getDiceRoll() {
@@ -134,26 +134,14 @@ public class CeeLoGame extends DiceGame {
     }
 
     public void startGame() {
-        String userString = this.console.getStringInput(CeeLoConstant.WELCOME_BET_PROMPT);
-        while (!userString.toLowerCase().equals(CeeLoConstant.YES) && !userString.toLowerCase().equals(CeeLoConstant.NO)) {
-            userString = this.console.getStringInput(CeeLoConstant.INVALID_YES_OR_NO_PROMPT);
-        }
-
-        if ((userString.toLowerCase().equals(CeeLoConstant.NO))) {
-            exit();
-            return;
-        } else if (userString.toLowerCase().equals(CeeLoConstant.YES)) {
-            takeBet();
-            setPot();
-            String playerString = this.console.getStringInput(CeeLoConstant.RULES_PROMPT);
-
+        String userString = this.console.getStringInput(CeeLoConstant.WELCOME_PROMPT);
+        takeBet();
+        setPot();
+        String playerString = this.console.getStringInput(CeeLoConstant.RULES_PROMPT);
             if (playerString.toLowerCase().equals(CeeLoConstant.YES)) {
                 this.console.println(this.printGameRules());
             }
-
-            setPot();
         }
-    }
 
     public String printScore() {
         String result = "";
