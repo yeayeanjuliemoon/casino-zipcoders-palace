@@ -24,7 +24,7 @@ public class Dice {
         }
     }
 
-    public List<Integer> getDiceValues(){
+    public List<Integer> getDieValues(){
         return this.dieValues;
     }
 

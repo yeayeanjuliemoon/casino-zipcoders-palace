@@ -46,7 +46,7 @@ public class CeeLoGame extends DiceGame {
     public List<Integer> getDiceRoll() {
         Dice dice = new Dice(3);
         dice.rollDice();
-        return dice.getDiceValues();
+        return dice.getDieValues();
     }
 
     public String checkRoll(List<Integer> diceValues, String currentPlayer, String currentOpponent) {
